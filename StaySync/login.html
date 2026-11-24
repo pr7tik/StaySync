@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StaySync — Hotel Housekeeping Coordination System</title>
+
+    <!-- Fonts: Inter (Dashboard) & Poppins (Existing Login Page) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Boxicons CDN (Required by Existing Login/Registration Page) -->
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Application Stylesheets -->
+    <link rel="stylesheet" href="css/loader.css" />
+    <link rel="stylesheet" href="css/login.css" />
+    <link rel="stylesheet" href="css/app.css" />
+  </head>
+  <body>
+
+    <!-- =========================================================
+         1. ANIMATED INITIAL LOADING SCREEN (UPGRADED)
+         ========================================================= -->
+    <div id="loading-screen" class="loading-screen" aria-live="polite">
+      <div class="loader-grid-bg" aria-hidden="true"></div>
+
+      <div class="loader-stage">
+        <div class="loader-emblem">
+          <div class="loader-ring" aria-hidden="true"></div>
+          <div class="loader-tile" aria-hidden="true">
+            <svg width="46" height="46" viewBox="0 0 46 46" fill="none">
+              <rect
+                class="svg-frame"
+                x="3"
+                y="3"
+                width="40"
+                height="40"
+                rx="11"
+                fill="#202020"
+              />
+              <path
+                class="svg-stroke stroke-top"
+                d="M14.5 17.5C14.5 15.2909 16.2909 13.5 18.5 13.5H29.5"
+                stroke="#FFFFFF"
+                stroke-width="2.5"
+                stroke-linecap="round"
+              />
+              <path
+                class="svg-stroke stroke-mid"
+                d="M14.5 23H31.5"
+                stroke="#E58A42"
+                stroke-width="2.5"
+                stroke-linecap="round"
+              />
+              <path
+                class="svg-stroke stroke-bot"
+                d="M31.5 28.5C31.5 30.7091 29.7091 32.5 27.5 32.5H16.5"
+                stroke="#FFFFFF"
+                stroke-width="2.5"
+                stroke-linecap="round"
+              />
+            </svg>
+          </div>
+        </div>
+
+        <div class="loader-wordmark">
+          <div class="loader-brand">Stay<span>Sync</span></div>
+          <div class="loader-tagline">Hotel Housekeeping Coordination</div>
+        </div>
+
+        <div class="loader-progress-panel">
+          <div class="loader-meta-row">
+            <div class="loader-status-wrap">
+              <span class="loader-pulse-dot" aria-hidden="true"></span>
+              <span id="loader-status-text" class="loader-text">
+                Preparing your workspace...
+              </span>
+            </div>
+            <span id="loader-percent" class="loader-percent">0%</span>
+          </div>
+
+          <div
+            class="loader-progress-track"
+            role="progressbar"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            aria-valuenow="0"
+          >
+            <div id="loader-progress-bar" class="loader-progress-bar"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="loader-footer">v1.0 · Local Workspace Engine</div>
+    </div>
+    
+    <!-- =========================================================
+         2. STAYSYNC LOGIN / REGISTRATION PAGE
+         ========================================================= -->
+    <section id="auth-screen" class="auth-screen hidden" aria-label="Authentication">
+      <div class="auth-shell">
+        <!-- Brand Header -->
+        <header class="auth-brand-header">
+          <div class="auth-brand-title">Stay<span>Sync</span></div>
+          <div class="auth-hotel-name">THE MERIDIAN GRAND HOTEL</div>
+        </header>
+
+        <!-- Compact White Card -->
+        <div class="auth-card">
+          <!-- Mode Switcher -->
+          <div class="auth-tabs" role="tablist" aria-label="Authentication mode">
+            <button
+              type="button"
+              id="auth-tab-login"
+              class="auth-tab active"
+              role="tab"
+              aria-selected="true"
+              aria-controls="auth-panel-login"
+            >
+              Sign in
+            </button>
+            <button
+              type="button"
+              id="auth-tab-register"
+              class="auth-tab"
+              role="tab"
+              aria-selected="false"
+              aria-controls="auth-panel-register"
+            >
+              Register
+            </button>
+          </div>
+
+          <!-- Login Panel -->
+          <div id="auth-panel-login" class="auth-panel active" role="tabpanel">
+            <div class="auth-heading">
+              <h1>Welcome back</h1>
+              <p>Sign in to access your housekeeping workspace.</p>
+            </div>
+
+            <!-- Purely Visual Role Selector -->
+            <div class="auth-role-section">
+              <div class="auth-role-label">Select your workspace role</div>
+              <div
+                class="auth-role-grid"
+                role="radiogroup"
+                aria-label="Workspace role preview"
+              >
+                <button
+                  type="button"
+                  class="auth-role-card"
+                  role="radio"
+                  aria-checked="false"
+                  data-role-label="Administrator"
+                >
+                  <i data-lucide="shield"></i>
+                  <span>Administrator</span>
+                </button>
+
+                <button
+                  type="button"
+                  class="auth-role-card active"
+                  role="radio"
+                  aria-checked="true"
+                  data-role-label="Housekeeping Manager"
+                >
+                  <i data-lucide="briefcase"></i>
+                  <span>Housekeeping Manager</span>
+                </button>
+
+                <button
+                  type="button"
+                  class="auth-role-card"
+                  role="radio"
+                  aria-checked="false"
+                  data-role-label="Housekeeping Staff"
+                >
+                  <i data-lucide="users"></i>
+                  <span>Housekeeping Staff</span>
+                </button>
+              </div>
+            </div>
+
+            <form id="login-form" class="auth-form" novalidate>
+              <div class="auth-field">
+                <label for="login-userid">User ID</label>
+                <input
+                  id="login-userid"
+                  type="text"
+                  placeholder="Enter User ID"
+                  autocomplete="username"
+                  required
+                />
+              </div>
+
+              <div class="auth-field">
+                <div class="auth-label-row">
+                  <label for="login-password">Password</label>
+                  <a href="#" id="forgot-password-link" class="auth-link">
+                    Forgot password?
+                  </a>
+                </div>
+                <div class="auth-password-wrap">
+                  <input
+                    id="login-password"
+                    type="password"
+                    placeholder="Enter password"
+                    autocomplete="current-password"
+                    required
+                  />
+                  <button
+                    type="button"
+                    class="auth-eye-btn"
+                    data-target="login-password"
+                    aria-label="Toggle password visibility"
+                  >
+                    <i data-lucide="eye"></i>
+                  </button>
+                </div>
+              </div>
+
+              <button type="submit" class="auth-submit-btn">Sign in</button>
+              <div class="auth-role-caption">
+                Selected role: <span id="selected-role-label">Housekeeping Manager</span>
+              </div>
+            </form>
+
+            <div class="auth-switch-note">
+              Need a staff account?
+              <button type="button" id="switch-to-register" class="auth-inline-btn">
+                Register
+              </button>
+            </div>
+          </div>
+
+          <!-- Registration Panel -->
+          <div id="auth-panel-register" class="auth-panel" role="tabpanel">
+            <div class="auth-heading">
+              <h1>Create account</h1>
+              <p>Register a new housekeeping staff profile.</p>
+            </div>
+
+            <form id="register-form" class="auth-form" novalidate>
+              <div class="auth-field">
+                <label for="register-username">Full Name</label>
+                <input
+                  id="register-username"
+                  type="text"
+                  placeholder="Enter your full name"
+                  autocomplete="name"
+                  required
+                />
+              </div>
+
+              <div class="auth-field">
+                <label for="register-email">Work Email</label>
+                <input
+                  id="register-email"
+                  type="email"
+                  placeholder="name@meridiangrand.com"
+                  autocomplete="email"
+                  required
+                />
+              </div>
+
+              <div class="auth-field">
+                <label for="register-password">Password</label>
+                <div class="auth-password-wrap">
+                  <input
+                    id="register-password"
+                    type="password"
+                    placeholder="Minimum 6 characters"
+                    autocomplete="new-password"
+                    required
+                  />
+                  <button
+                    type="button"
+                    class="auth-eye-btn"
+                    data-target="register-password"
+                    aria-label="Toggle password visibility"
+                  >
+                    <i data-lucide="eye"></i>
+                  </button>
+                </div>
+              </div>
+
+              <button type="submit" class="auth-submit-btn">Create account</button>
+            </form>
+
+            <div class="auth-switch-note">
+              Already have an account?
+              <button type="button" id="switch-to-login" class="auth-inline-btn">
+                Sign in
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         3. MAIN STAYSYNC SAAS APPLICATION SHELL
+         ========================================================= -->
+    <div id="app-shell" class="app-shell hidden">
+      <!-- Mobile Sidebar Backdrop -->
+      <div id="sidebar-backdrop" class="sidebar-backdrop hidden"></div>
+
+      <!-- Collapsible Sidebar -->
+      <aside id="sidebar" class="sidebar" aria-label="Main Navigation">
+        <div class="sidebar-header">
+          <div class="brand-lockup">
+            <div class="brand-icon" aria-hidden="true">
+              <svg width="28" height="28" viewBox="0 0 40 40" fill="none">
+                <rect x="2" y="2" width="36" height="36" rx="10" fill="#202020" />
+                <path
+                  d="M13 15.5C13 13.567 14.567 12 16.5 12H25.5"
+                  stroke="#FFFFFF"
+                  stroke-width="2.6"
+                  stroke-linecap="round"
+                />
+                <path
+                  d="M27 24.5C27 26.433 25.433 28 23.5 28H14.5"
+                  stroke="#FFFFFF"
+                  stroke-width="2.6"
+                  stroke-linecap="round"
+                />
+                <path
+                  d="M13 20H27"
+                  stroke="#E58A42"
+                  stroke-width="2.6"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </div>
+            <div class="brand-text">
+              <span class="brand-name">StaySync</span>
+              <span id="sidebar-hotel-name" class="brand-sub">Meridian Grand</span>
+            </div>
+          </div>
+
+          <button
+            id="sidebar-collapse-btn"
+            class="icon-btn sidebar-toggle-desktop"
+            title="Toggle Sidebar"
+            aria-label="Toggle Sidebar"
+          >
+            <i data-lucide="panel-left-close"></i>
+          </button>
+        </div>
+
+        <nav class="sidebar-nav">
+          <div class="nav-group-label">Operations</div>
+          <button class="nav-item active" data-view="dashboard">
+            <i data-lucide="layout-dashboard"></i>
+            <span class="nav-label">Dashboard</span>
+          </button>
+          <button class="nav-item" data-view="rooms">
+            <i data-lucide="bed-double"></i>
+            <span class="nav-label">Room Management</span>
+          </button>
+          <button class="nav-item" data-view="tasks">
+            <i data-lucide="clipboard-check"></i>
+            <span class="nav-label">Housekeeping Tasks</span>
+          </button>
+          <button class="nav-item" data-view="staff">
+            <i data-lucide="users"></i>
+            <span class="nav-label">Staff Management</span>
+          </button>
+
+          <div class="nav-group-label">Quality & Maintenance</div>
+          <button class="nav-item" data-view="inspections">
+            <i data-lucide="shield-check"></i>
+            <span class="nav-label">Room Inspections</span>
+          </button>
+          <button class="nav-item" data-view="maintenance">
+            <i data-lucide="wrench"></i>
+            <span class="nav-label">Maintenance Requests</span>
+          </button>
+
+          <div class="nav-group-label">Insights & System</div>
+          <button class="nav-item" data-view="notifications">
+            <i data-lucide="bell"></i>
+            <span class="nav-label">Notifications</span>
+            <span id="nav-notif-badge" class="nav-badge hidden">0</span>
+          </button>
+          <button class="nav-item" data-view="reports">
+            <i data-lucide="bar-chart-3"></i>
+            <span class="nav-label">Reports & Analytics</span>
+          </button>
+          <button class="nav-item" data-view="settings">
+            <i data-lucide="settings"></i>
+            <span class="nav-label">Settings</span>
+          </button>
+        </nav>
+
+        <div class="sidebar-footer">
+          <div class="user-card">
+            <div id="sidebar-user-avatar" class="user-avatar">EV</div>
+            <div class="user-meta">
+              <div id="sidebar-user-name" class="user-name">User</div>
+              <div id="sidebar-user-role" class="user-role">Role</div>
+            </div>
+          </div>
+          <button id="logout-btn" class="nav-item nav-logout">
+            <i data-lucide="log-out"></i>
+            <span class="nav-label">Logout</span>
+          </button>
+        </div>
+      </aside>
+
+      <!-- Main Workspace -->
+      <div class="main-wrapper">
+        <header class="topbar">
+          <div class="topbar-left">
+            <button
+              id="mobile-menu-btn"
+              class="icon-btn mobile-only"
+              aria-label="Open Navigation"
+            >
+              <i data-lucide="menu"></i>
+            </button>
+            <div>
+              <h1 id="page-title" class="page-title">Dashboard</h1>
+              <p id="page-subtitle" class="page-subtitle">
+                Live hotel housekeeping coordination overview
+              </p>
+            </div>
+          </div>
+
+          <div class="topbar-right">
+            <div class="topbar-search">
+              <i data-lucide="search"></i>
+              <input
+                id="global-search-input"
+                type="text"
+                placeholder="Quick search rooms or tasks..."
+                aria-label="Quick search"
+              />
+            </div>
+
+            <button
+              id="topbar-notif-btn"
+              class="icon-btn notif-trigger"
+              title="Notifications"
+              aria-label="View Notifications"
+            >
+              <i data-lucide="bell"></i>
+              <span id="topbar-notif-dot" class="notif-dot hidden"></span>
+            </button>
+
+            <div class="topbar-role-pill" id="topbar-role-pill">Administrator</div>
+          </div>
+        </header>
+
+        <main id="view-container" class="view-container"></main>
+      </div>
+    </div>
+
+    <!-- =========================================================
+         4. REUSABLE MODAL, CONFIRM DIALOG & TOAST CONTAINERS
+         ========================================================= -->
+    <div id="modal-overlay" class="modal-overlay hidden" role="dialog" aria-modal="true">
+      <div class="modal-dialog" id="modal-dialog">
+        <div class="modal-header">
+          <div>
+            <h2 id="modal-title" class="modal-title">Modal Title</h2>
+            <p id="modal-subtitle" class="modal-subtitle"></p>
+          </div>
+          <button id="modal-close-btn" class="icon-btn" aria-label="Close modal">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+        <div id="modal-body" class="modal-body"></div>
+      </div>
+    </div>
+
+    <div id="confirm-overlay" class="modal-overlay hidden" role="alertdialog" aria-modal="true">
+      <div class="modal-dialog modal-sm">
+        <div class="modal-header">
+          <h2 id="confirm-title" class="modal-title">Confirm Action</h2>
+          <button id="confirm-close-btn" class="icon-btn" aria-label="Close">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p id="confirm-message" class="confirm-message"></p>
+          <div class="modal-actions">
+            <button type="button" id="confirm-cancel-btn" class="btn-secondary">
+              Cancel
+            </button>
+            <button type="button" id="confirm-ok-btn" class="btn-danger">
+              Confirm
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+    <!-- Allowed External Libraries: Lucide Icons & Chart.js -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Application JavaScript Modules -->
+    <script src="js/demo-data.js"></script>
+    <script src="js/store.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/loader.js"></script>
+  </body>
+</html>
