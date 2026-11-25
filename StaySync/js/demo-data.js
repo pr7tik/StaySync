@@ -1,5 +1,5 @@
 /* =====================================================================
-   STAYSYNC — CENTRALIZED JAVASCRIPT DEMO DATA
+   SyncStay — CENTRALIZED JAVASCRIPT DEMO DATA
    Every account initializes from this exact shared dataset on first run.
    ===================================================================== */
 
@@ -28,28 +28,28 @@ const demoData = {
   users: [
     {
       userId: "12629947",
-      password: "StaySync@321",
+      password: "SyncStay@321",
       name: "Elena Vance",
       email: "elena.vance@meridiangrand.com",
       role: "Administrator"
     },
     {
       userId: "12630000",
-      password: "StaySync@321",
+      password: "SyncStay@321",
       name: "Marcus Chen",
       email: "marcus.chen@meridiangrand.com",
       role: "Housekeeping Manager"
     },
     {
       userId: "12629686",
-      password: "StaySync@321",
+      password: "SyncStay@321",
       name: "Priya Sharma",
       email: "priya.sharma@meridiangrand.com",
       role: "Housekeeping Staff"
     },
     {
       userId: "12614967",
-      password: "StaySync@321",
+      password: "SyncStay@321",
       name: "David Morales",
       email: "david.morales@meridiangrand.com",
       role: "Housekeeping Staff"

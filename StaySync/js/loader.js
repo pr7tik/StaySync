@@ -1,10 +1,10 @@
 /* =====================================================================
-   STAYSYNC — ANIMATED INITIAL LOADING SEQUENCE (UPGRADED)
+   SyncStay — ANIMATED INITIAL LOADING SEQUENCE (UPGRADED)
    Smoothly interpolates progress, initializes data, preloads assets
    gracefully, enforces a minimum 2-second display, then reveals Login
    ===================================================================== */
 
-(function bootstrapStaySync() {
+(function bootstrapSyncStay() {
   const loadingScreen = document.getElementById("loading-screen");
   const progressBar = document.getElementById("loader-progress-bar");
   const progressTrack = document.querySelector(".loader-progress-track");
@@ -74,8 +74,8 @@
 
     // Step 1: Initialize centralized demo data & LocalStorage store
     try {
-      StaySyncStore.init();
-      StaySyncAuth.init((user) => StaySyncApp.mount(user));
+      SyncStayStore.init();
+      SyncStayAuth.init((user) => SyncStayApp.mount(user));
     } catch (err) {
       console.error("Initialization error:", err);
     }
@@ -99,8 +99,8 @@
     if (percentEl) percentEl.textContent = "100%";
 
     // Step 4: Reveal Login/Registration (or persisted session) behind the fading loader
-    StaySyncAuth.revealAfterLoading();
-    StaySyncUI.refreshIcons();
+    SyncStayAuth.revealAfterLoading();
+    SyncStayUI.refreshIcons();
 
     requestAnimationFrame(() => {
       loadingScreen.classList.add("is-leaving");

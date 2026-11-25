@@ -1,5 +1,5 @@
 /**
- * STAYSYNC — THE MERIDIAN GRAND HOTEL
+ * SyncStay — THE MERIDIAN GRAND HOTEL
  * Public Homepage Interactions, Image Fallback, Scroll Reveal & Form Validation
  */
 

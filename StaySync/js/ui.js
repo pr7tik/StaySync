@@ -1,9 +1,9 @@
 /* =====================================================================
-   STAYSYNC — SHARED UI COMPONENTS
+   SyncStay — SHARED UI COMPONENTS
    Toasts, reusable modals, confirm dialogs, badges & escaping helpers
    ===================================================================== */
 
-const StaySyncUI = (() => {
+const SyncStayUI = (() => {
   const modalOverlay = document.getElementById("modal-overlay");
   const modalTitle = document.getElementById("modal-title");
   const modalSubtitle = document.getElementById("modal-subtitle");

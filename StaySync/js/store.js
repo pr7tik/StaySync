@@ -1,11 +1,11 @@
 /* =====================================================================
-   STAYSYNC — LOCALSTORAGE STATE MANAGER & BUSINESS LOGIC ENGINE
+   SyncStay — LOCALSTORAGE STATE MANAGER & BUSINESS LOGIC ENGINE
    Handles initialization, persistence, cross-module sync & CSV export
    ===================================================================== */
 
-const StaySyncStore = (() => {
-  const DATA_KEY = "staysync_data_v1";
-  const SESSION_KEY = "staysync_session_v1";
+const SyncStayStore = (() => {
+  const DATA_KEY = "SyncStay_data_v1";
+  const SESSION_KEY = "SyncStay_session_v1";
 
   let state = null;
 
@@ -25,7 +25,7 @@ const StaySyncStore = (() => {
     try {
       localStorage.setItem(DATA_KEY, JSON.stringify(state));
     } catch (err) {
-      console.error("Failed to save StaySync state to LocalStorage:", err);
+      console.error("Failed to save SyncStay state to LocalStorage:", err);
     }
   }
 

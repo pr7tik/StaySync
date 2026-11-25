@@ -1,9 +1,9 @@
 /* =====================================================================
-   STAYSYNC — AUTHENTICATION & LOGIN / REGISTRATION CONTROLLER
+   SyncStay — AUTHENTICATION & LOGIN / REGISTRATION CONTROLLER
    Preserves all authentication logic, demo accounts & session storage
    ===================================================================== */
 
-const StaySyncAuth = (() => {
+const SyncStayAuth = (() => {
   const authScreen = document.getElementById("auth-screen");
   const appShell = document.getElementById("app-shell");
 
@@ -55,7 +55,7 @@ const StaySyncAuth = (() => {
         const showing = input.type === "text";
         input.type = showing ? "password" : "text";
         btn.innerHTML = `<i data-lucide="${showing ? "eye" : "eye-off"}"></i>`;
-        StaySyncUI.refreshIcons();
+        SyncStayUI.refreshIcons();
       });
     });
 
@@ -66,20 +66,20 @@ const StaySyncAuth = (() => {
       const password = loginPasswordInput.value;
 
       if (!userId || !password) {
-        StaySyncUI.toast("Please enter both User ID and Password.", "error");
+        SyncStayUI.toast("Please enter both User ID and Password.", "error");
         return;
       }
 
-      const user = StaySyncStore.authenticate(userId, password);
+      const user = SyncStayStore.authenticate(userId, password);
       if (!user) {
-        StaySyncUI.toast("Invalid User ID or password. Check demo credentials.", "error");
+        SyncStayUI.toast("Invalid User ID or password. Check demo credentials.", "error");
         return;
       }
 
-      StaySyncStore.setSession(user);
+      SyncStayStore.setSession(user);
       loginForm.reset();
       showApp(user);
-      StaySyncUI.toast(`Welcome back, ${user.name} (${user.role}).`, "success");
+      SyncStayUI.toast(`Welcome back, ${user.name} (${user.role}).`, "success");
     });
 
     // Registration Form Submit (existing logic preserved; assigns Housekeeping Staff only)
@@ -90,21 +90,21 @@ const StaySyncAuth = (() => {
       const password = regPasswordInput.value;
 
       if (username.length < 2) {
-        StaySyncUI.toast("Full name must be at least 2 characters.", "error");
+        SyncStayUI.toast("Full name must be at least 2 characters.", "error");
         return;
       }
       if (!email || !email.includes("@")) {
-        StaySyncUI.toast("Please enter a valid work email address.", "error");
+        SyncStayUI.toast("Please enter a valid work email address.", "error");
         return;
       }
       if (password.length < 6) {
-        StaySyncUI.toast("Password must be at least 6 characters.", "error");
+        SyncStayUI.toast("Password must be at least 6 characters.", "error");
         return;
       }
 
-      const result = StaySyncStore.registerUser({ username, email, password });
+      const result = SyncStayStore.registerUser({ username, email, password });
       if (result.error) {
-        StaySyncUI.toast(result.error, "error");
+        SyncStayUI.toast(result.error, "error");
         return;
       }
 
@@ -112,7 +112,7 @@ const StaySyncAuth = (() => {
       switchMode("login");
       loginUserIdInput.value = result.user.userId;
       loginPasswordInput.value = "";
-      StaySyncUI.toast(
+      SyncStayUI.toast(
         `Registered as Housekeeping Staff! Your User ID is ${result.user.userId}.`,
         "success"
       );
@@ -121,8 +121,8 @@ const StaySyncAuth = (() => {
     // Demo credentials reference modal via Forgot Password
     forgotPasswordLink.addEventListener("click", (e) => {
       e.preventDefault();
-      StaySyncUI.openModal({
-        title: "StaySync Demo Accounts",
+      SyncStayUI.openModal({
+        title: "SyncStay Demo Accounts",
         subtitle: "Use any of the four default accounts below to sign in",
         html: `
           <table class="cred-table">
@@ -139,9 +139,9 @@ const StaySyncAuth = (() => {
                 .map(
                   (u) => `
                 <tr>
-                  <td class="mono">${StaySyncUI.escapeHtml(u.userId)}</td>
-                  <td class="mono">${StaySyncUI.escapeHtml(u.password)}</td>
-                  <td>${StaySyncUI.renderBadge(u.role)}</td>
+                  <td class="mono">${SyncStayUI.escapeHtml(u.userId)}</td>
+                  <td class="mono">${SyncStayUI.escapeHtml(u.password)}</td>
+                  <td>${SyncStayUI.renderBadge(u.role)}</td>
                   <td>
                     <button type="button" class="btn-secondary btn-sm fill-demo-btn" data-id="${u.userId}" data-pw="${u.password}">
                       Use
@@ -163,13 +163,13 @@ const StaySyncAuth = (() => {
               switchMode("login");
               loginUserIdInput.value = btn.dataset.id;
               loginPasswordInput.value = btn.dataset.pw;
-              StaySyncUI.closeModal();
-              StaySyncUI.toast(`Filled credentials for ${btn.dataset.id}. Click Sign in.`, "info");
+              SyncStayUI.closeModal();
+              SyncStayUI.toast(`Filled credentials for ${btn.dataset.id}. Click Sign in.`, "info");
             });
           });
           body
             .querySelector("#close-demo-modal-btn")
-            .addEventListener("click", StaySyncUI.closeModal);
+            .addEventListener("click", SyncStayUI.closeModal);
         }
       });
     });
@@ -179,7 +179,7 @@ const StaySyncAuth = (() => {
     appShell.classList.add("hidden");
     authScreen.classList.remove("hidden");
     switchMode("login");
-    StaySyncUI.refreshIcons();
+    SyncStayUI.refreshIcons();
   }
 
   function showApp(user) {
@@ -191,13 +191,13 @@ const StaySyncAuth = (() => {
   }
 
   function logout() {
-    StaySyncStore.clearSession();
+    SyncStayStore.clearSession();
     showAuth();
-    StaySyncUI.toast("You have been logged out.", "info");
+    SyncStayUI.toast("You have been logged out.", "info");
   }
 
   function revealAfterLoading() {
-    const activeSession = StaySyncStore.getSession();
+    const activeSession = SyncStayStore.getSession();
     if (activeSession) {
       showApp(activeSession);
     } else {

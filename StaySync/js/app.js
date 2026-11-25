@@ -1,10 +1,10 @@
 /* =====================================================================
-   STAYSYNC — MAIN SPA CONTROLLER & ALL HOUSEKEEPING MODULES
+   SyncStay — MAIN SPA CONTROLLER & ALL HOUSEKEEPING MODULES
    Dashboard, Rooms, Tasks, Staff, Inspections, Maintenance,
    Notifications, Reports & Analytics (Chart.js + CSV), and Settings
    ===================================================================== */
 
-const StaySyncApp = (() => {
+const SyncStayApp = (() => {
   let currentUser = null;
   let currentView = "dashboard";
   let chartInstances = [];
@@ -111,7 +111,7 @@ const StaySyncApp = (() => {
   let shellListenersBound = false;
 
   function perms() {
-    return StaySyncStore.getPermissions(currentUser?.role);
+    return SyncStayStore.getPermissions(currentUser?.role);
   }
 
   function destroyCharts() {
@@ -151,7 +151,7 @@ const StaySyncApp = (() => {
       el.sidebarCollapseBtn.innerHTML = `<i data-lucide="${
         isCollapsed ? "panel-left-open" : "panel-left-close"
       }"></i>`;
-      StaySyncUI.refreshIcons();
+      SyncStayUI.refreshIcons();
     });
 
     // Mobile drawer toggle
@@ -182,13 +182,13 @@ const StaySyncApp = (() => {
 
     // Logout
     el.logoutBtn.addEventListener("click", () => {
-      StaySyncUI.confirm({
+      SyncStayUI.confirm({
         title: "Sign Out",
-        message: "Are you sure you want to log out of StaySync?",
+        message: "Are you sure you want to log out of SyncStay?",
         confirmLabel: "Logout",
         onConfirm: () => {
           destroyCharts();
-          StaySyncAuth.logout();
+          SyncStayAuth.logout();
         }
       });
     });
@@ -200,9 +200,9 @@ const StaySyncApp = (() => {
   }
 
   function updateShellUserChrome() {
-    const state = StaySyncStore.getState();
+    const state = SyncStayStore.getState();
     el.sidebarHotelName.textContent = state.hotel.name;
-    el.sidebarUserAvatar.textContent = StaySyncUI.getInitials(currentUser.name);
+    el.sidebarUserAvatar.textContent = SyncStayUI.getInitials(currentUser.name);
     el.sidebarUserName.textContent = currentUser.name;
     el.sidebarUserRole.textContent = currentUser.role;
     el.topbarRolePill.textContent = currentUser.role;
@@ -210,7 +210,7 @@ const StaySyncApp = (() => {
   }
 
   function updateNotificationIndicators() {
-    const unread = StaySyncStore.getUnreadNotificationCount();
+    const unread = SyncStayStore.getUnreadNotificationCount();
     el.navNotifBadge.textContent = unread;
     el.navNotifBadge.classList.toggle("hidden", unread === 0);
     el.topbarNotifDot.classList.toggle("hidden", unread === 0);
@@ -262,7 +262,7 @@ const StaySyncApp = (() => {
       default:
         renderDashboard();
     }
-    StaySyncUI.refreshIcons();
+    SyncStayUI.refreshIcons();
   }
 
   /* ===================================================================
@@ -270,8 +270,8 @@ const StaySyncApp = (() => {
      =================================================================== */
 
   function renderDashboard() {
-    const state = StaySyncStore.getState();
-    const stats = StaySyncStore.getDashboardStats();
+    const state = SyncStayStore.getState();
+    const stats = SyncStayStore.getDashboardStats();
     const statusBreakdown = ROOM_STATUSES.map((status) => ({
       status,
       count: state.rooms.filter((r) => r.status === status).length
@@ -382,7 +382,7 @@ const StaySyncApp = (() => {
                   return `
                     <div class="status-bar-item">
                       <div class="status-bar-meta">
-                        <span>${StaySyncUI.escapeHtml(item.status)}</span>
+                        <span>${SyncStayUI.escapeHtml(item.status)}</span>
                         <span class="mono">${item.count} (${pct}%)</span>
                       </div>
                       <div class="status-bar-track">
@@ -417,14 +417,14 @@ const StaySyncApp = (() => {
                         (t) => `
                   <div class="list-row">
                     <div class="list-row-main">
-                      <div class="list-row-title">Room ${StaySyncUI.escapeHtml(
+                      <div class="list-row-title">Room ${SyncStayUI.escapeHtml(
                         t.roomNumber
-                      )} · ${StaySyncUI.escapeHtml(t.type)}</div>
-                      <div class="list-row-sub">${StaySyncUI.escapeHtml(
-                        StaySyncStore.getStaffName(t.assignedStaffId)
-                      )} · Due ${StaySyncUI.escapeHtml(t.deadline.split(" ")[1] || t.deadline)}</div>
+                      )} · ${SyncStayUI.escapeHtml(t.type)}</div>
+                      <div class="list-row-sub">${SyncStayUI.escapeHtml(
+                        SyncStayStore.getStaffName(t.assignedStaffId)
+                      )} · Due ${SyncStayUI.escapeHtml(t.deadline.split(" ")[1] || t.deadline)}</div>
                     </div>
-                    ${StaySyncUI.renderBadge(t.status)}
+                    ${SyncStayUI.renderBadge(t.status)}
                   </div>
                 `
                       )
@@ -450,12 +450,12 @@ const StaySyncApp = (() => {
                   (st) => `
                 <div class="list-row">
                   <div class="list-row-main">
-                    <div class="list-row-title">${StaySyncUI.escapeHtml(st.name)}</div>
-                    <div class="list-row-sub">${StaySyncUI.escapeHtml(
+                    <div class="list-row-title">${SyncStayUI.escapeHtml(st.name)}</div>
+                    <div class="list-row-sub">${SyncStayUI.escapeHtml(
                       st.assignedFloor
-                    )} · ${StaySyncStore.getStaffAssignedTaskCount(st.id)} open tasks</div>
+                    )} · ${SyncStayStore.getStaffAssignedTaskCount(st.id)} open tasks</div>
                   </div>
-                  ${StaySyncUI.renderBadge(st.availability)}
+                  ${SyncStayUI.renderBadge(st.availability)}
                 </div>
               `
                 )
@@ -478,10 +478,10 @@ const StaySyncApp = (() => {
                   (act) => `
                 <div class="list-row">
                   <div class="list-row-main">
-                    <div class="list-row-title">${StaySyncUI.escapeHtml(act.action)}</div>
-                    <div class="list-row-sub">${StaySyncUI.escapeHtml(act.detail)}</div>
+                    <div class="list-row-title">${SyncStayUI.escapeHtml(act.action)}</div>
+                    <div class="list-row-sub">${SyncStayUI.escapeHtml(act.detail)}</div>
                   </div>
-                  <span class="text-muted">${StaySyncUI.escapeHtml(
+                  <span class="text-muted">${SyncStayUI.escapeHtml(
                     act.timestamp.split(" ")[1] || act.timestamp
                   )}</span>
                 </div>
@@ -505,7 +505,7 @@ const StaySyncApp = (() => {
   function initDashboardChart() {
     const canvas = document.getElementById("dash-cleaning-chart");
     if (!canvas || typeof Chart === "undefined") return;
-    const perf = StaySyncStore.getState().performanceHistory;
+    const perf = SyncStayStore.getState().performanceHistory;
 
     const chart = new Chart(canvas, {
       type: "bar",
@@ -556,7 +556,7 @@ const StaySyncApp = (() => {
      =================================================================== */
 
   function renderRooms() {
-    const state = StaySyncStore.getState();
+    const state = SyncStayStore.getState();
     const p = perms();
     const floors = [...new Set(state.rooms.map((r) => r.floor))].sort((a, b) => a - b);
     const types = [...new Set(state.rooms.map((r) => r.type))].sort();
@@ -567,7 +567,7 @@ const StaySyncApp = (() => {
         !q ||
         r.roomNumber.toLowerCase().includes(q) ||
         r.type.toLowerCase().includes(q) ||
-        StaySyncStore.getStaffName(r.assignedStaffId).toLowerCase().includes(q) ||
+        SyncStayStore.getStaffName(r.assignedStaffId).toLowerCase().includes(q) ||
         (r.specialInstructions || "").toLowerCase().includes(q);
       const matchFloor = filters.rooms.floor === "all" || String(r.floor) === filters.rooms.floor;
       const matchType = filters.rooms.type === "all" || r.type === filters.rooms.type;
@@ -578,7 +578,7 @@ const StaySyncApp = (() => {
     el.viewContainer.innerHTML = `
       <div class="section-toolbar">
         <div class="filter-group">
-          <input id="room-search" class="input-control" type="text" placeholder="Search room, staff, notes..." value="${StaySyncUI.escapeHtml(
+          <input id="room-search" class="input-control" type="text" placeholder="Search room, staff, notes..." value="${SyncStayUI.escapeHtml(
             filters.rooms.search
           )}" />
           <select id="room-floor-filter" class="select-control">
@@ -597,9 +597,9 @@ const StaySyncApp = (() => {
             ${types
               .map(
                 (t) =>
-                  `<option value="${StaySyncUI.escapeHtml(t)}" ${
+                  `<option value="${SyncStayUI.escapeHtml(t)}" ${
                     filters.rooms.type === t ? "selected" : ""
-                  }>${StaySyncUI.escapeHtml(t)}</option>`
+                  }>${SyncStayUI.escapeHtml(t)}</option>`
               )
               .join("")}
           </select>
@@ -643,15 +643,15 @@ const StaySyncApp = (() => {
                       .map(
                         (room) => `
                   <tr>
-                    <td class="mono">Room ${StaySyncUI.escapeHtml(room.roomNumber)}</td>
+                    <td class="mono">Room ${SyncStayUI.escapeHtml(room.roomNumber)}</td>
                     <td>Floor ${room.floor}</td>
-                    <td>${StaySyncUI.escapeHtml(room.type)}</td>
-                    <td>${StaySyncUI.renderBadge(room.occupancyStatus)}</td>
-                    <td>${StaySyncUI.renderBadge(room.status)}</td>
-                    <td>${StaySyncUI.escapeHtml(
-                      StaySyncStore.getStaffName(room.assignedStaffId)
+                    <td>${SyncStayUI.escapeHtml(room.type)}</td>
+                    <td>${SyncStayUI.renderBadge(room.occupancyStatus)}</td>
+                    <td>${SyncStayUI.renderBadge(room.status)}</td>
+                    <td>${SyncStayUI.escapeHtml(
+                      SyncStayStore.getStaffName(room.assignedStaffId)
                     )}</td>
-                    <td class="text-muted">${StaySyncUI.escapeHtml(room.lastCleaned)}</td>
+                    <td class="text-muted">${SyncStayUI.escapeHtml(room.lastCleaned)}</td>
                     <td>
                       <div class="table-actions">
                         <button class="icon-btn room-view-btn" data-room="${
@@ -709,13 +709,13 @@ const StaySyncApp = (() => {
     });
     el.viewContainer.querySelectorAll(".room-del-btn").forEach((btn) => {
       btn.addEventListener("click", () => {
-        StaySyncUI.confirm({
+        SyncStayUI.confirm({
           title: "Delete Room",
           message: `Remove Room ${btn.dataset.room} permanently from inventory?`,
           confirmLabel: "Delete",
           onConfirm: () => {
-            StaySyncStore.deleteRoom(btn.dataset.room);
-            StaySyncUI.toast(`Room ${btn.dataset.room} deleted.`, "success");
+            SyncStayStore.deleteRoom(btn.dataset.room);
+            SyncStayUI.toast(`Room ${btn.dataset.room} deleted.`, "success");
             renderRooms();
           }
         });
@@ -724,41 +724,41 @@ const StaySyncApp = (() => {
   }
 
   function openRoomDetailsModal(roomNumber) {
-    const state = StaySyncStore.getState();
+    const state = SyncStayStore.getState();
     const room = state.rooms.find((r) => r.roomNumber === roomNumber);
     if (!room) return;
 
     const roomTasks = state.tasks.filter((t) => t.roomNumber === roomNumber);
     const roomMaint = state.maintenance.filter((m) => m.roomNumber === roomNumber);
 
-    StaySyncUI.openModal({
+    SyncStayUI.openModal({
       title: `Room ${room.roomNumber} Details`,
       subtitle: `Floor ${room.floor} · ${room.type}`,
       html: `
         <div class="detail-grid">
           <div class="detail-box">
             <div class="detail-label">Room Status</div>
-            <div class="detail-value">${StaySyncUI.renderBadge(room.status)}</div>
+            <div class="detail-value">${SyncStayUI.renderBadge(room.status)}</div>
           </div>
           <div class="detail-box">
             <div class="detail-label">Occupancy / Cleaning</div>
-            <div class="detail-value">${StaySyncUI.escapeHtml(
+            <div class="detail-value">${SyncStayUI.escapeHtml(
               room.occupancyStatus
-            )} · ${StaySyncUI.escapeHtml(room.cleaningStatus)}</div>
+            )} · ${SyncStayUI.escapeHtml(room.cleaningStatus)}</div>
           </div>
           <div class="detail-box">
             <div class="detail-label">Assigned Staff</div>
-            <div class="detail-value">${StaySyncUI.escapeHtml(
-              StaySyncStore.getStaffName(room.assignedStaffId)
+            <div class="detail-value">${SyncStayUI.escapeHtml(
+              SyncStayStore.getStaffName(room.assignedStaffId)
             )}</div>
           </div>
           <div class="detail-box">
             <div class="detail-label">Last Cleaned</div>
-            <div class="detail-value">${StaySyncUI.escapeHtml(room.lastCleaned)}</div>
+            <div class="detail-value">${SyncStayUI.escapeHtml(room.lastCleaned)}</div>
           </div>
           <div class="detail-box full">
             <div class="detail-label">Special Instructions</div>
-            <div class="detail-value">${StaySyncUI.escapeHtml(
+            <div class="detail-value">${SyncStayUI.escapeHtml(
               room.specialInstructions || "None provided."
             )}</div>
           </div>
@@ -776,18 +776,18 @@ const StaySyncApp = (() => {
         </div>
       `,
       onRender: (body) => {
-        body.querySelector("#room-detail-close").addEventListener("click", StaySyncUI.closeModal);
+        body.querySelector("#room-detail-close").addEventListener("click", SyncStayUI.closeModal);
       }
     });
   }
 
   function openRoomFormModal(editRoomNumber) {
-    const state = StaySyncStore.getState();
+    const state = SyncStayStore.getState();
     const room = editRoomNumber
       ? state.rooms.find((r) => r.roomNumber === editRoomNumber)
       : null;
 
-    StaySyncUI.openModal({
+    SyncStayUI.openModal({
       title: room ? `Edit Room ${room.roomNumber}` : "Add New Room",
       subtitle: "Configure room details, housekeeping status, and staff assignment",
       html: `
@@ -795,7 +795,7 @@ const StaySyncApp = (() => {
           <div class="form-grid">
             <div class="form-field">
               <label for="rf-number">Room Number *</label>
-              <input id="rf-number" class="input-control" type="text" required value="${StaySyncUI.escapeHtml(
+              <input id="rf-number" class="input-control" type="text" required value="${SyncStayUI.escapeHtml(
                 room?.roomNumber || ""
               )}" placeholder="e.g. 501" />
             </div>
@@ -846,7 +846,7 @@ const StaySyncApp = (() => {
                     (st) =>
                       `<option value="${st.id}" ${
                         room?.assignedStaffId === st.id ? "selected" : ""
-                      }>${StaySyncUI.escapeHtml(st.name)} (${StaySyncUI.escapeHtml(
+                      }>${SyncStayUI.escapeHtml(st.name)} (${SyncStayUI.escapeHtml(
                         st.assignedFloor
                       )})</option>`
                   )
@@ -855,13 +855,13 @@ const StaySyncApp = (() => {
             </div>
             <div class="form-field">
               <label for="rf-cleaned">Last Cleaned</label>
-              <input id="rf-cleaned" class="input-control" type="text" value="${StaySyncUI.escapeHtml(
-                room?.lastCleaned || StaySyncStore.nowTimestamp()
+              <input id="rf-cleaned" class="input-control" type="text" value="${SyncStayUI.escapeHtml(
+                room?.lastCleaned || SyncStayStore.nowTimestamp()
               )}" />
             </div>
             <div class="form-field full">
               <label for="rf-notes">Special Instructions</label>
-              <textarea id="rf-notes" class="textarea-control" placeholder="Guest preferences, allergies, VIP setup...">${StaySyncUI.escapeHtml(
+              <textarea id="rf-notes" class="textarea-control" placeholder="Guest preferences, allergies, VIP setup...">${SyncStayUI.escapeHtml(
                 room?.specialInstructions || ""
               )}</textarea>
             </div>
@@ -873,10 +873,10 @@ const StaySyncApp = (() => {
         </form>
       `,
       onRender: (body) => {
-        body.querySelector("#rf-cancel").addEventListener("click", StaySyncUI.closeModal);
+        body.querySelector("#rf-cancel").addEventListener("click", SyncStayUI.closeModal);
         body.querySelector("#room-form").addEventListener("submit", (e) => {
           e.preventDefault();
-          const result = StaySyncStore.saveRoom(
+          const result = SyncStayStore.saveRoom(
             {
               roomNumber: body.querySelector("#rf-number").value,
               floor: body.querySelector("#rf-floor").value,
@@ -890,11 +890,11 @@ const StaySyncApp = (() => {
           );
 
           if (result.error) {
-            StaySyncUI.toast(result.error, "error");
+            SyncStayUI.toast(result.error, "error");
             return;
           }
-          StaySyncUI.closeModal();
-          StaySyncUI.toast(
+          SyncStayUI.closeModal();
+          SyncStayUI.toast(
             room
               ? `Room ${result.room.roomNumber} updated.`
               : `Room ${result.room.roomNumber} added.`,
@@ -911,12 +911,12 @@ const StaySyncApp = (() => {
      =================================================================== */
 
   function renderTasks() {
-    const state = StaySyncStore.getState();
+    const state = SyncStayStore.getState();
     const p = perms();
 
     const filtered = state.tasks.filter((t) => {
       const q = filters.tasks.search.toLowerCase();
-      const staffName = StaySyncStore.getStaffName(t.assignedStaffId).toLowerCase();
+      const staffName = SyncStayStore.getStaffName(t.assignedStaffId).toLowerCase();
       const matchSearch =
         !q ||
         t.id.toLowerCase().includes(q) ||
@@ -935,7 +935,7 @@ const StaySyncApp = (() => {
     el.viewContainer.innerHTML = `
       <div class="section-toolbar">
         <div class="filter-group">
-          <input id="task-search" class="input-control" type="text" placeholder="Search task ID, room, staff..." value="${StaySyncUI.escapeHtml(
+          <input id="task-search" class="input-control" type="text" placeholder="Search task ID, room, staff..." value="${SyncStayUI.escapeHtml(
             filters.tasks.search
           )}" />
           <select id="task-scope-filter" class="select-control">
@@ -997,18 +997,18 @@ const StaySyncApp = (() => {
                         const canProgress = p.canManageTasks || isMine;
                         return `
                   <tr>
-                    <td class="mono">${StaySyncUI.escapeHtml(t.id)}</td>
-                    <td class="mono">Room ${StaySyncUI.escapeHtml(t.roomNumber)}</td>
+                    <td class="mono">${SyncStayUI.escapeHtml(t.id)}</td>
+                    <td class="mono">Room ${SyncStayUI.escapeHtml(t.roomNumber)}</td>
                     <td>
-                      <div>${StaySyncUI.escapeHtml(t.type)}</div>
-                      <div class="text-muted">${StaySyncUI.escapeHtml(t.description)}</div>
+                      <div>${SyncStayUI.escapeHtml(t.type)}</div>
+                      <div class="text-muted">${SyncStayUI.escapeHtml(t.description)}</div>
                     </td>
-                    <td>${StaySyncUI.escapeHtml(
-                      StaySyncStore.getStaffName(t.assignedStaffId)
+                    <td>${SyncStayUI.escapeHtml(
+                      SyncStayStore.getStaffName(t.assignedStaffId)
                     )}</td>
-                    <td>${StaySyncUI.renderBadge(t.priority)}</td>
-                    <td class="text-muted">${StaySyncUI.escapeHtml(t.deadline)}</td>
-                    <td>${StaySyncUI.renderBadge(t.status)}</td>
+                    <td>${SyncStayUI.renderBadge(t.priority)}</td>
+                    <td class="text-muted">${SyncStayUI.escapeHtml(t.deadline)}</td>
+                    <td>${SyncStayUI.renderBadge(t.status)}</td>
                     <td>
                       <div class="table-actions">
                         ${
@@ -1068,9 +1068,9 @@ const StaySyncApp = (() => {
 
     el.viewContainer.querySelectorAll(".task-step-btn").forEach((btn) => {
       btn.addEventListener("click", () => {
-        const updated = StaySyncStore.updateTaskStatus(btn.dataset.id, btn.dataset.next);
+        const updated = SyncStayStore.updateTaskStatus(btn.dataset.id, btn.dataset.next);
         if (updated) {
-          StaySyncUI.toast(
+          SyncStayUI.toast(
             `${updated.id} moved to ${updated.status}. Room ${updated.roomNumber} synced.`,
             "success"
           );
@@ -1086,13 +1086,13 @@ const StaySyncApp = (() => {
 
     el.viewContainer.querySelectorAll(".task-del-btn").forEach((btn) => {
       btn.addEventListener("click", () => {
-        StaySyncUI.confirm({
+        SyncStayUI.confirm({
           title: "Delete Task",
           message: `Delete housekeeping task ${btn.dataset.id}?`,
           confirmLabel: "Delete",
           onConfirm: () => {
-            StaySyncStore.deleteTask(btn.dataset.id);
-            StaySyncUI.toast(`Task ${btn.dataset.id} deleted.`, "success");
+            SyncStayStore.deleteTask(btn.dataset.id);
+            SyncStayUI.toast(`Task ${btn.dataset.id} deleted.`, "success");
             renderTasks();
           }
         });
@@ -1101,11 +1101,11 @@ const StaySyncApp = (() => {
   }
 
   function openTaskFormModal(editTaskId) {
-    const state = StaySyncStore.getState();
+    const state = SyncStayStore.getState();
     const task = editTaskId ? state.tasks.find((t) => t.id === editTaskId) : null;
-    const defaultDeadline = StaySyncStore.nowTimestamp().slice(0, 11) + "15:00";
+    const defaultDeadline = SyncStayStore.nowTimestamp().slice(0, 11) + "15:00";
 
-    StaySyncUI.openModal({
+    SyncStayUI.openModal({
       title: task ? `Edit Task ${task.id}` : "Create Housekeeping Task",
       subtitle: "Assign room cleaning work with deadline and priority",
       html: `
@@ -1119,7 +1119,7 @@ const StaySyncApp = (() => {
                     (r) =>
                       `<option value="${r.roomNumber}" ${
                         task?.roomNumber === r.roomNumber ? "selected" : ""
-                      }>Room ${r.roomNumber} — ${StaySyncUI.escapeHtml(r.status)}</option>`
+                      }>Room ${r.roomNumber} — ${SyncStayUI.escapeHtml(r.status)}</option>`
                   )
                   .join("")}
               </select>
@@ -1141,7 +1141,7 @@ const StaySyncApp = (() => {
                     (st) =>
                       `<option value="${st.id}" ${
                         task?.assignedStaffId === st.id ? "selected" : ""
-                      }>${StaySyncUI.escapeHtml(st.name)} (${StaySyncUI.escapeHtml(
+                      }>${SyncStayUI.escapeHtml(st.name)} (${SyncStayUI.escapeHtml(
                         st.assignedFloor
                       )})</option>`
                   )
@@ -1163,7 +1163,7 @@ const StaySyncApp = (() => {
             </div>
             <div class="form-field">
               <label for="tf-deadline">Deadline *</label>
-              <input id="tf-deadline" class="input-control" type="text" required value="${StaySyncUI.escapeHtml(
+              <input id="tf-deadline" class="input-control" type="text" required value="${SyncStayUI.escapeHtml(
                 task?.deadline || defaultDeadline
               )}" placeholder="YYYY-MM-DD HH:MM" />
             </div>
@@ -1180,7 +1180,7 @@ const StaySyncApp = (() => {
             </div>
             <div class="form-field full">
               <label for="tf-desc">Description *</label>
-              <textarea id="tf-desc" class="textarea-control" required placeholder="Specific cleaning instructions...">${StaySyncUI.escapeHtml(
+              <textarea id="tf-desc" class="textarea-control" required placeholder="Specific cleaning instructions...">${SyncStayUI.escapeHtml(
                 task?.description || ""
               )}</textarea>
             </div>
@@ -1192,10 +1192,10 @@ const StaySyncApp = (() => {
         </form>
       `,
       onRender: (body) => {
-        body.querySelector("#tf-cancel").addEventListener("click", StaySyncUI.closeModal);
+        body.querySelector("#tf-cancel").addEventListener("click", SyncStayUI.closeModal);
         body.querySelector("#task-form").addEventListener("submit", (e) => {
           e.preventDefault();
-          const res = StaySyncStore.saveTask(
+          const res = SyncStayStore.saveTask(
             {
               roomNumber: body.querySelector("#tf-room").value,
               type: body.querySelector("#tf-type").value,
@@ -1209,11 +1209,11 @@ const StaySyncApp = (() => {
           );
 
           if (res.error) {
-            StaySyncUI.toast(res.error, "error");
+            SyncStayUI.toast(res.error, "error");
             return;
           }
-          StaySyncUI.closeModal();
-          StaySyncUI.toast(
+          SyncStayUI.closeModal();
+          SyncStayUI.toast(
             task ? `Task ${res.task.id} updated.` : `Task ${res.task.id} created.`,
             "success"
           );
@@ -1229,7 +1229,7 @@ const StaySyncApp = (() => {
      =================================================================== */
 
   function renderStaff() {
-    const state = StaySyncStore.getState();
+    const state = SyncStayStore.getState();
     const p = perms();
 
     const filtered = state.staff.filter((st) => {
@@ -1248,7 +1248,7 @@ const StaySyncApp = (() => {
     el.viewContainer.innerHTML = `
       <div class="section-toolbar">
         <div class="filter-group">
-          <input id="staff-search" class="input-control" type="text" placeholder="Search ID, name, floor..." value="${StaySyncUI.escapeHtml(
+          <input id="staff-search" class="input-control" type="text" placeholder="Search ID, name, floor..." value="${SyncStayUI.escapeHtml(
             filters.staff.search
           )}" />
           <select id="staff-avail-filter" class="select-control">
@@ -1293,18 +1293,18 @@ const StaySyncApp = (() => {
                 filtered.length
                   ? filtered
                       .map((st) => {
-                        const openCount = StaySyncStore.getStaffAssignedTaskCount(st.id);
+                        const openCount = SyncStayStore.getStaffAssignedTaskCount(st.id);
                         return `
                   <tr>
-                    <td class="mono">${StaySyncUI.escapeHtml(st.id)}</td>
+                    <td class="mono">${SyncStayUI.escapeHtml(st.id)}</td>
                     <td>
-                      <div style="font-weight:500">${StaySyncUI.escapeHtml(st.name)}</div>
-                      <div class="text-muted">${StaySyncUI.escapeHtml(st.contact)}</div>
+                      <div style="font-weight:500">${SyncStayUI.escapeHtml(st.name)}</div>
+                      <div class="text-muted">${SyncStayUI.escapeHtml(st.contact)}</div>
                     </td>
-                    <td>${StaySyncUI.renderBadge(st.role)}</td>
-                    <td>${StaySyncUI.escapeHtml(st.assignedFloor)}</td>
-                    <td class="text-muted">${StaySyncUI.escapeHtml(st.shift)}</td>
-                    <td>${StaySyncUI.renderBadge(st.availability)}</td>
+                    <td>${SyncStayUI.renderBadge(st.role)}</td>
+                    <td>${SyncStayUI.escapeHtml(st.assignedFloor)}</td>
+                    <td class="text-muted">${SyncStayUI.escapeHtml(st.shift)}</td>
+                    <td>${SyncStayUI.renderBadge(st.availability)}</td>
                     <td>
                       <span class="mono">${openCount}</span> active ·
                       <span class="mono">${st.completedTasks || 0}</span> done
@@ -1353,13 +1353,13 @@ const StaySyncApp = (() => {
 
     el.viewContainer.querySelectorAll(".staff-del-btn").forEach((btn) => {
       btn.addEventListener("click", () => {
-        StaySyncUI.confirm({
+        SyncStayUI.confirm({
           title: "Remove Staff Member",
           message: `Remove Employee ${btn.dataset.id} from the roster? Open tasks assigned to them will become unassigned.`,
           confirmLabel: "Remove",
           onConfirm: () => {
-            StaySyncStore.deleteStaff(btn.dataset.id);
-            StaySyncUI.toast("Staff member removed.", "success");
+            SyncStayStore.deleteStaff(btn.dataset.id);
+            SyncStayUI.toast("Staff member removed.", "success");
             renderStaff();
           }
         });
@@ -1368,10 +1368,10 @@ const StaySyncApp = (() => {
   }
 
   function openStaffFormModal(editId) {
-    const state = StaySyncStore.getState();
+    const state = SyncStayStore.getState();
     const member = editId ? state.staff.find((s) => s.id === editId) : null;
 
-    StaySyncUI.openModal({
+    SyncStayUI.openModal({
       title: member ? `Edit Staff — ${member.name}` : "Add Staff Member",
       subtitle: "Configure floor assignment, shift schedule, and availability",
       html: `
@@ -1381,11 +1381,11 @@ const StaySyncApp = (() => {
               <label for="sf-id">Employee ID</label>
               <input id="sf-id" class="input-control" type="text" ${
                 member ? "disabled" : ""
-              } value="${StaySyncUI.escapeHtml(member?.id || "")}" placeholder="Auto-generated if blank" />
+              } value="${SyncStayUI.escapeHtml(member?.id || "")}" placeholder="Auto-generated if blank" />
             </div>
             <div class="form-field">
               <label for="sf-name">Full Name *</label>
-              <input id="sf-name" class="input-control" type="text" required value="${StaySyncUI.escapeHtml(
+              <input id="sf-name" class="input-control" type="text" required value="${SyncStayUI.escapeHtml(
                 member?.name || ""
               )}" />
             </div>
@@ -1404,13 +1404,13 @@ const StaySyncApp = (() => {
             </div>
             <div class="form-field">
               <label for="sf-contact">Contact *</label>
-              <input id="sf-contact" class="input-control" type="text" required value="${StaySyncUI.escapeHtml(
+              <input id="sf-contact" class="input-control" type="text" required value="${SyncStayUI.escapeHtml(
                 member?.contact || ""
               )}" placeholder="+1 (555) 000-0000" />
             </div>
             <div class="form-field">
               <label for="sf-floor">Assigned Floor *</label>
-              <input id="sf-floor" class="input-control" type="text" required value="${StaySyncUI.escapeHtml(
+              <input id="sf-floor" class="input-control" type="text" required value="${SyncStayUI.escapeHtml(
                 member?.assignedFloor || "Floor 1"
               )}" placeholder="e.g. Floor 2" />
             </div>
@@ -1452,10 +1452,10 @@ const StaySyncApp = (() => {
         </form>
       `,
       onRender: (body) => {
-        body.querySelector("#sf-cancel").addEventListener("click", StaySyncUI.closeModal);
+        body.querySelector("#sf-cancel").addEventListener("click", SyncStayUI.closeModal);
         body.querySelector("#staff-form").addEventListener("submit", (e) => {
           e.preventDefault();
-          const res = StaySyncStore.saveStaff(
+          const res = SyncStayStore.saveStaff(
             {
               id: body.querySelector("#sf-id").value,
               name: body.querySelector("#sf-name").value,
@@ -1468,11 +1468,11 @@ const StaySyncApp = (() => {
             editId
           );
           if (res.error) {
-            StaySyncUI.toast(res.error, "error");
+            SyncStayUI.toast(res.error, "error");
             return;
           }
-          StaySyncUI.closeModal();
-          StaySyncUI.toast(
+          SyncStayUI.closeModal();
+          SyncStayUI.toast(
             member ? `${res.staff.name} updated.` : `${res.staff.name} added to roster.`,
             "success"
           );
@@ -1487,7 +1487,7 @@ const StaySyncApp = (() => {
      =================================================================== */
 
   function renderInspections() {
-    const state = StaySyncStore.getState();
+    const state = SyncStayStore.getState();
     const p = perms();
     const readyForInspection = state.rooms.filter((r) => r.status === "Vacant & Clean");
 
@@ -1536,13 +1536,13 @@ const StaySyncApp = (() => {
                         ).length;
                         return `
                   <tr>
-                    <td class="mono">${StaySyncUI.escapeHtml(ins.id)}</td>
-                    <td class="mono">Room ${StaySyncUI.escapeHtml(ins.roomNumber)}</td>
-                    <td>${StaySyncUI.escapeHtml(ins.inspectorName)}</td>
-                    <td class="text-muted">${StaySyncUI.escapeHtml(ins.date)}</td>
+                    <td class="mono">${SyncStayUI.escapeHtml(ins.id)}</td>
+                    <td class="mono">Room ${SyncStayUI.escapeHtml(ins.roomNumber)}</td>
+                    <td>${SyncStayUI.escapeHtml(ins.inspectorName)}</td>
+                    <td class="text-muted">${SyncStayUI.escapeHtml(ins.date)}</td>
                     <td class="mono">${passedCount} / ${INSPECTION_CHECKLIST_ITEMS.length}</td>
-                    <td>${StaySyncUI.renderBadge(ins.result)}</td>
-                    <td class="text-muted">${StaySyncUI.escapeHtml(ins.notes || "—")}</td>
+                    <td>${SyncStayUI.renderBadge(ins.result)}</td>
+                    <td class="text-muted">${SyncStayUI.escapeHtml(ins.notes || "—")}</td>
                   </tr>
                 `;
                       })
@@ -1560,14 +1560,14 @@ const StaySyncApp = (() => {
   }
 
   function openInspectionModal() {
-    const state = StaySyncStore.getState();
+    const state = SyncStayStore.getState();
     const sortedRooms = [...state.rooms].sort((a, b) => {
       if (a.status === "Vacant & Clean" && b.status !== "Vacant & Clean") return -1;
       if (b.status === "Vacant & Clean" && a.status !== "Vacant & Clean") return 1;
       return a.roomNumber.localeCompare(b.roomNumber, undefined, { numeric: true });
     });
 
-    StaySyncUI.openModal({
+    SyncStayUI.openModal({
       title: "Room Quality Inspection",
       subtitle: "Failed or re-cleaning results automatically create a high-priority re-cleaning task",
       html: `
@@ -1579,7 +1579,7 @@ const StaySyncApp = (() => {
                 ${sortedRooms
                   .map(
                     (r) =>
-                      `<option value="${r.roomNumber}">Room ${r.roomNumber} (${StaySyncUI.escapeHtml(
+                      `<option value="${r.roomNumber}">Room ${r.roomNumber} (${SyncStayUI.escapeHtml(
                         r.status
                       )})</option>`
                   )
@@ -1605,7 +1605,7 @@ const StaySyncApp = (() => {
                 (item) => `
                 <label class="checklist-item">
                   <input type="checkbox" name="chk-${item.key}" checked />
-                  <span>${StaySyncUI.escapeHtml(item.label)}</span>
+                  <span>${SyncStayUI.escapeHtml(item.label)}</span>
                 </label>
               `
               ).join("")}
@@ -1639,7 +1639,7 @@ const StaySyncApp = (() => {
           });
         });
 
-        body.querySelector("#inf-cancel").addEventListener("click", StaySyncUI.closeModal);
+        body.querySelector("#inf-cancel").addEventListener("click", SyncStayUI.closeModal);
         body.querySelector("#inspection-form").addEventListener("submit", (e) => {
           e.preventDefault();
           const checklist = {};
@@ -1647,7 +1647,7 @@ const StaySyncApp = (() => {
             checklist[item.key] = body.querySelector(`input[name="chk-${item.key}"]`).checked;
           });
 
-          const outcome = StaySyncStore.createInspection({
+          const outcome = SyncStayStore.createInspection({
             roomNumber: body.querySelector("#inf-room").value,
             inspectorName: currentUser.name,
             result: resultSelect.value,
@@ -1655,15 +1655,15 @@ const StaySyncApp = (() => {
             checklist
           });
 
-          StaySyncUI.closeModal();
+          SyncStayUI.closeModal();
           updateNotificationIndicators();
           if (outcome.autoTask) {
-            StaySyncUI.toast(
+            SyncStayUI.toast(
               `Inspection ${outcome.inspection.result}. Auto-created re-cleaning task ${outcome.autoTask.id}.`,
               "info"
             );
           } else {
-            StaySyncUI.toast(
+            SyncStayUI.toast(
               `Room ${outcome.inspection.roomNumber} passed inspection and is now Inspected.`,
               "success"
             );
@@ -1679,7 +1679,7 @@ const StaySyncApp = (() => {
      =================================================================== */
 
   function renderMaintenance() {
-    const state = StaySyncStore.getState();
+    const state = SyncStayStore.getState();
     const p = perms();
 
     const filtered = state.maintenance.filter((m) => {
@@ -1701,7 +1701,7 @@ const StaySyncApp = (() => {
     el.viewContainer.innerHTML = `
       <div class="section-toolbar">
         <div class="filter-group">
-          <input id="maint-search" class="input-control" type="text" placeholder="Search room, issue, reporter..." value="${StaySyncUI.escapeHtml(
+          <input id="maint-search" class="input-control" type="text" placeholder="Search room, issue, reporter..." value="${SyncStayUI.escapeHtml(
             filters.maintenance.search
           )}" />
           <select id="maint-status-filter" class="select-control">
@@ -1752,18 +1752,18 @@ const StaySyncApp = (() => {
                       .map(
                         (m) => `
                   <tr>
-                    <td class="mono">${StaySyncUI.escapeHtml(m.id)}</td>
-                    <td class="mono">Room ${StaySyncUI.escapeHtml(m.roomNumber)}</td>
+                    <td class="mono">${SyncStayUI.escapeHtml(m.id)}</td>
+                    <td class="mono">Room ${SyncStayUI.escapeHtml(m.roomNumber)}</td>
                     <td>
-                      <div style="font-weight:500">${StaySyncUI.escapeHtml(m.issue)}</div>
-                      <div class="text-muted">${StaySyncUI.escapeHtml(m.description)}</div>
+                      <div style="font-weight:500">${SyncStayUI.escapeHtml(m.issue)}</div>
+                      <div class="text-muted">${SyncStayUI.escapeHtml(m.description)}</div>
                     </td>
-                    <td>${StaySyncUI.renderBadge(m.priority)}</td>
+                    <td>${SyncStayUI.renderBadge(m.priority)}</td>
                     <td>
-                      <div>${StaySyncUI.escapeHtml(m.reporter)}</div>
-                      <div class="text-muted">${StaySyncUI.escapeHtml(m.createdAt)}</div>
+                      <div>${SyncStayUI.escapeHtml(m.reporter)}</div>
+                      <div class="text-muted">${SyncStayUI.escapeHtml(m.createdAt)}</div>
                     </td>
-                    <td>${StaySyncUI.renderBadge(m.status)}</td>
+                    <td>${SyncStayUI.renderBadge(m.status)}</td>
                     <td>
                       <div class="table-actions">
                         ${
@@ -1812,9 +1812,9 @@ const StaySyncApp = (() => {
 
     el.viewContainer.querySelectorAll(".maint-resolve-btn").forEach((btn) => {
       btn.addEventListener("click", () => {
-        const updated = StaySyncStore.updateMaintenanceStatus(btn.dataset.id, "Resolved");
+        const updated = SyncStayStore.updateMaintenanceStatus(btn.dataset.id, "Resolved");
         if (updated) {
-          StaySyncUI.toast(
+          SyncStayUI.toast(
             `${updated.id} resolved. Room ${updated.roomNumber} status updated.`,
             "success"
           );
@@ -1829,13 +1829,13 @@ const StaySyncApp = (() => {
 
     el.viewContainer.querySelectorAll(".maint-del-btn").forEach((btn) => {
       btn.addEventListener("click", () => {
-        StaySyncUI.confirm({
+        SyncStayUI.confirm({
           title: "Delete Maintenance Ticket",
           message: `Permanently delete maintenance ticket ${btn.dataset.id}?`,
           confirmLabel: "Delete",
           onConfirm: () => {
-            StaySyncStore.deleteMaintenance(btn.dataset.id);
-            StaySyncUI.toast(`Ticket ${btn.dataset.id} deleted.`, "success");
+            SyncStayStore.deleteMaintenance(btn.dataset.id);
+            SyncStayUI.toast(`Ticket ${btn.dataset.id} deleted.`, "success");
             renderMaintenance();
           }
         });
@@ -1844,10 +1844,10 @@ const StaySyncApp = (() => {
   }
 
   function openMaintenanceModal(editId) {
-    const state = StaySyncStore.getState();
+    const state = SyncStayStore.getState();
     const ticket = editId ? state.maintenance.find((m) => m.id === editId) : null;
 
-    StaySyncUI.openModal({
+    SyncStayUI.openModal({
       title: ticket ? `Edit Maintenance ${ticket.id}` : "Report Maintenance Issue",
       subtitle: "Critical unresolved tickets automatically set the room to Under Maintenance",
       html: `
@@ -1903,7 +1903,7 @@ const StaySyncApp = (() => {
             </div>
             <div class="form-field full">
               <label for="mf-desc">Issue Description *</label>
-              <textarea id="mf-desc" class="textarea-control" required placeholder="Describe the fault clearly...">${StaySyncUI.escapeHtml(
+              <textarea id="mf-desc" class="textarea-control" required placeholder="Describe the fault clearly...">${SyncStayUI.escapeHtml(
                 ticket?.description || ""
               )}</textarea>
             </div>
@@ -1917,10 +1917,10 @@ const StaySyncApp = (() => {
         </form>
       `,
       onRender: (body) => {
-        body.querySelector("#mf-cancel").addEventListener("click", StaySyncUI.closeModal);
+        body.querySelector("#mf-cancel").addEventListener("click", SyncStayUI.closeModal);
         body.querySelector("#maint-form").addEventListener("submit", (e) => {
           e.preventDefault();
-          const res = StaySyncStore.saveMaintenance(
+          const res = SyncStayStore.saveMaintenance(
             {
               roomNumber: body.querySelector("#mf-room").value,
               issue: body.querySelector("#mf-issue").value,
@@ -1933,12 +1933,12 @@ const StaySyncApp = (() => {
           );
 
           if (res.error) {
-            StaySyncUI.toast(res.error, "error");
+            SyncStayUI.toast(res.error, "error");
             return;
           }
-          StaySyncUI.closeModal();
+          SyncStayUI.closeModal();
           updateNotificationIndicators();
-          StaySyncUI.toast(
+          SyncStayUI.toast(
             ticket
               ? `Ticket ${res.maintenance.id} updated.`
               : `Reported ${res.maintenance.issue} for Room ${res.maintenance.roomNumber}.`,
@@ -1955,8 +1955,8 @@ const StaySyncApp = (() => {
      =================================================================== */
 
   function renderNotifications() {
-    const notifications = StaySyncStore.getState().notifications;
-    const unreadCount = StaySyncStore.getUnreadNotificationCount();
+    const notifications = SyncStayStore.getState().notifications;
+    const unreadCount = SyncStayStore.getUnreadNotificationCount();
 
     const iconForType = (type) => {
       switch (type) {
@@ -1999,13 +1999,13 @@ const StaySyncApp = (() => {
                 </div>
                 <div>
                   <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-                    <strong style="font-size:13.5px">${StaySyncUI.escapeHtml(n.title)}</strong>
-                    ${StaySyncUI.renderBadge(n.type)}
+                    <strong style="font-size:13.5px">${SyncStayUI.escapeHtml(n.title)}</strong>
+                    ${SyncStayUI.renderBadge(n.type)}
                   </div>
-                  <p style="margin:4px 0 4px;color:var(--text-secondary);font-size:13px">${StaySyncUI.escapeHtml(
+                  <p style="margin:4px 0 4px;color:var(--text-secondary);font-size:13px">${SyncStayUI.escapeHtml(
                     n.message
                   )}</p>
-                  <span class="text-muted" style="font-size:11.5px">${StaySyncUI.escapeHtml(
+                  <span class="text-muted" style="font-size:11.5px">${SyncStayUI.escapeHtml(
                     n.timestamp
                   )}</span>
                 </div>
@@ -2027,21 +2027,21 @@ const StaySyncApp = (() => {
     `;
 
     document.getElementById("mark-all-read-btn").addEventListener("click", () => {
-      StaySyncStore.markAllNotificationsRead();
+      SyncStayStore.markAllNotificationsRead();
       updateNotificationIndicators();
-      StaySyncUI.toast("All notifications marked as read.", "success");
+      SyncStayUI.toast("All notifications marked as read.", "success");
       renderNotifications();
     });
 
     document.getElementById("clear-read-btn").addEventListener("click", () => {
-      StaySyncStore.clearReadNotifications();
-      StaySyncUI.toast("Cleared read notifications.", "info");
+      SyncStayStore.clearReadNotifications();
+      SyncStayUI.toast("Cleared read notifications.", "info");
       renderNotifications();
     });
 
     el.viewContainer.querySelectorAll(".notif-read-btn").forEach((btn) => {
       btn.addEventListener("click", () => {
-        StaySyncStore.markNotificationRead(btn.dataset.id);
+        SyncStayStore.markNotificationRead(btn.dataset.id);
         updateNotificationIndicators();
         renderNotifications();
       });
@@ -2053,8 +2053,8 @@ const StaySyncApp = (() => {
      =================================================================== */
 
   function renderReports() {
-    const state = StaySyncStore.getState();
-    const stats = StaySyncStore.getDashboardStats();
+    const state = SyncStayStore.getState();
+    const stats = SyncStayStore.getDashboardStats();
     const passedInsp = state.inspections.filter((i) => i.result === "Passed").length;
     const passRate = state.inspections.length
       ? Math.round((passedInsp / state.inspections.length) * 100)
@@ -2156,8 +2156,8 @@ const StaySyncApp = (() => {
 
     // CSV Export Handlers
     document.getElementById("exp-rooms-csv").addEventListener("click", () => {
-      StaySyncStore.exportToCSV(
-        "staysync-rooms.csv",
+      SyncStayStore.exportToCSV(
+        "SyncStay-rooms.csv",
         ["Room Number", "Floor", "Type", "Occupancy", "Cleaning Status", "Status", "Assigned Staff", "Last Cleaned", "Special Instructions"],
         state.rooms.map((r) => [
           r.roomNumber,
@@ -2166,35 +2166,35 @@ const StaySyncApp = (() => {
           r.occupancyStatus,
           r.cleaningStatus,
           r.status,
-          StaySyncStore.getStaffName(r.assignedStaffId),
+          SyncStayStore.getStaffName(r.assignedStaffId),
           r.lastCleaned,
           r.specialInstructions
         ])
       );
-      StaySyncUI.toast("Exported staysync-rooms.csv", "success");
+      SyncStayUI.toast("Exported SyncStay-rooms.csv", "success");
     });
 
     document.getElementById("exp-tasks-csv").addEventListener("click", () => {
-      StaySyncStore.exportToCSV(
-        "staysync-tasks.csv",
+      SyncStayStore.exportToCSV(
+        "SyncStay-tasks.csv",
         ["Task ID", "Room", "Task Type", "Assigned Staff", "Priority", "Deadline", "Status", "Description"],
         state.tasks.map((t) => [
           t.id,
           t.roomNumber,
           t.type,
-          StaySyncStore.getStaffName(t.assignedStaffId),
+          SyncStayStore.getStaffName(t.assignedStaffId),
           t.priority,
           t.deadline,
           t.status,
           t.description
         ])
       );
-      StaySyncUI.toast("Exported staysync-tasks.csv", "success");
+      SyncStayUI.toast("Exported SyncStay-tasks.csv", "success");
     });
 
     document.getElementById("exp-staff-csv").addEventListener("click", () => {
-      StaySyncStore.exportToCSV(
-        "staysync-staff-productivity.csv",
+      SyncStayStore.exportToCSV(
+        "SyncStay-staff-productivity.csv",
         ["Employee ID", "Name", "Role", "Assigned Floor", "Shift", "Availability", "Active Tasks", "Completed Tasks"],
         state.staff.map((st) => [
           st.id,
@@ -2203,16 +2203,16 @@ const StaySyncApp = (() => {
           st.assignedFloor,
           st.shift,
           st.availability,
-          StaySyncStore.getStaffAssignedTaskCount(st.id),
+          SyncStayStore.getStaffAssignedTaskCount(st.id),
           st.completedTasks || 0
         ])
       );
-      StaySyncUI.toast("Exported staysync-staff-productivity.csv", "success");
+      SyncStayUI.toast("Exported SyncStay-staff-productivity.csv", "success");
     });
 
     document.getElementById("exp-maint-csv").addEventListener("click", () => {
-      StaySyncStore.exportToCSV(
-        "staysync-maintenance.csv",
+      SyncStayStore.exportToCSV(
+        "SyncStay-maintenance.csv",
         ["Ticket ID", "Room", "Issue", "Priority", "Reporter", "Status", "Reported At", "Description"],
         state.maintenance.map((m) => [
           m.id,
@@ -2225,7 +2225,7 @@ const StaySyncApp = (() => {
           m.description
         ])
       );
-      StaySyncUI.toast("Exported staysync-maintenance.csv", "success");
+      SyncStayUI.toast("Exported SyncStay-maintenance.csv", "success");
     });
 
     initReportCharts();
@@ -2233,7 +2233,7 @@ const StaySyncApp = (() => {
 
   function initReportCharts() {
     if (typeof Chart === "undefined") return;
-    const state = StaySyncStore.getState();
+    const state = SyncStayStore.getState();
 
     // 1. Monthly Cleaning Line Chart
     const monthlyCtx = document.getElementById("rep-monthly-chart");
@@ -2388,7 +2388,7 @@ const StaySyncApp = (() => {
      =================================================================== */
 
   function renderSettings() {
-    const state = StaySyncStore.getState();
+    const state = SyncStayStore.getState();
     const p = perms();
 
     el.viewContainer.innerHTML = `
@@ -2407,13 +2407,13 @@ const StaySyncApp = (() => {
                   <label for="hs-name">Hotel Name</label>
                   <input id="hs-name" class="input-control" type="text" required ${
                     p.canEditHotelSettings ? "" : "disabled"
-                  } value="${StaySyncUI.escapeHtml(state.hotel.name)}" />
+                  } value="${SyncStayUI.escapeHtml(state.hotel.name)}" />
                 </div>
                 <div class="form-field">
                   <label for="hs-code">Property Code</label>
                   <input id="hs-code" class="input-control" type="text" required ${
                     p.canEditHotelSettings ? "" : "disabled"
-                  } value="${StaySyncUI.escapeHtml(state.hotel.propertyCode)}" />
+                  } value="${SyncStayUI.escapeHtml(state.hotel.propertyCode)}" />
                 </div>
                 <div class="form-field">
                   <label for="hs-floors">Total Floors</label>
@@ -2425,25 +2425,25 @@ const StaySyncApp = (() => {
                   <label for="hs-checkout">Checkout Time</label>
                   <input id="hs-checkout" class="input-control" type="time" ${
                     p.canEditHotelSettings ? "" : "disabled"
-                  } value="${StaySyncUI.escapeHtml(state.hotel.checkoutTime)}" />
+                  } value="${SyncStayUI.escapeHtml(state.hotel.checkoutTime)}" />
                 </div>
                 <div class="form-field">
                   <label for="hs-checkin">Check-in Time</label>
                   <input id="hs-checkin" class="input-control" type="time" ${
                     p.canEditHotelSettings ? "" : "disabled"
-                  } value="${StaySyncUI.escapeHtml(state.hotel.checkinTime)}" />
+                  } value="${SyncStayUI.escapeHtml(state.hotel.checkinTime)}" />
                 </div>
                 <div class="form-field full">
                   <label for="hs-email">Housekeeping Desk Email</label>
                   <input id="hs-email" class="input-control" type="email" required ${
                     p.canEditHotelSettings ? "" : "disabled"
-                  } value="${StaySyncUI.escapeHtml(state.hotel.contactEmail)}" />
+                  } value="${SyncStayUI.escapeHtml(state.hotel.contactEmail)}" />
                 </div>
                 <div class="form-field full">
                   <label for="hs-address">Property Address</label>
                   <input id="hs-address" class="input-control" type="text" required ${
                     p.canEditHotelSettings ? "" : "disabled"
-                  } value="${StaySyncUI.escapeHtml(state.hotel.address)}" />
+                  } value="${SyncStayUI.escapeHtml(state.hotel.address)}" />
                 </div>
               </div>
               <div class="modal-actions" style="border-top:none;padding-top:8px">
@@ -2469,15 +2469,15 @@ const StaySyncApp = (() => {
               <div class="detail-grid">
                 <div class="detail-box">
                   <div class="detail-label">Name</div>
-                  <div class="detail-value">${StaySyncUI.escapeHtml(currentUser.name)}</div>
+                  <div class="detail-value">${SyncStayUI.escapeHtml(currentUser.name)}</div>
                 </div>
                 <div class="detail-box">
                   <div class="detail-label">User ID</div>
-                  <div class="detail-value mono">${StaySyncUI.escapeHtml(currentUser.userId)}</div>
+                  <div class="detail-value mono">${SyncStayUI.escapeHtml(currentUser.userId)}</div>
                 </div>
                 <div class="detail-box full">
                   <div class="detail-label">Role</div>
-                  <div class="detail-value">${StaySyncUI.renderBadge(currentUser.role)}</div>
+                  <div class="detail-value">${SyncStayUI.renderBadge(currentUser.role)}</div>
                 </div>
               </div>
             </div>
@@ -2544,7 +2544,7 @@ const StaySyncApp = (() => {
     form.addEventListener("submit", (e) => {
       e.preventDefault();
       if (!p.canEditHotelSettings) return;
-      StaySyncStore.updateHotelSettings({
+      SyncStayStore.updateHotelSettings({
         name: document.getElementById("hs-name").value,
         propertyCode: document.getElementById("hs-code").value,
         floors: document.getElementById("hs-floors").value,
@@ -2554,20 +2554,20 @@ const StaySyncApp = (() => {
         address: document.getElementById("hs-address").value
       });
       updateShellUserChrome();
-      StaySyncUI.toast("Hotel settings saved.", "success");
+      SyncStayUI.toast("Hotel settings saved.", "success");
     });
 
     const resetBtn = document.getElementById("reset-demo-btn");
     if (resetBtn && p.canResetData) {
       resetBtn.addEventListener("click", () => {
-        StaySyncUI.confirm({
+        SyncStayUI.confirm({
           title: "Reset Demo Data",
           message:
             "This will erase all custom rooms, tasks, staff edits, inspections, and tickets in this browser and restore the default dataset from js/demo-data.js. Continue?",
           confirmLabel: "Reset All Data",
           onConfirm: () => {
-            StaySyncStore.resetDemoData();
-            StaySyncUI.toast("Demo data restored to defaults.", "success");
+            SyncStayStore.resetDemoData();
+            SyncStayUI.toast("Demo data restored to defaults.", "success");
             renderCurrentView();
           }
         });
