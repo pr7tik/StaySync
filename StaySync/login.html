@@ -28,79 +28,25 @@
   <body>
 
     <!-- =========================================================
-         1. ANIMATED INITIAL LOADING SCREEN (UPGRADED)
+         1. HOMEPAGE-MATCHING ENTRY LOADER
          ========================================================= -->
-    <div id="loading-screen" class="loading-screen" aria-live="polite">
-      <div class="loader-grid-bg" aria-hidden="true"></div>
-
-      <div class="loader-stage">
-        <div class="loader-emblem">
-          <div class="loader-ring" aria-hidden="true"></div>
-          <div class="loader-tile" aria-hidden="true">
-            <svg width="46" height="46" viewBox="0 0 46 46" fill="none">
-              <rect
-                class="svg-frame"
-                x="3"
-                y="3"
-                width="40"
-                height="40"
-                rx="11"
-                fill="#202020"
-              />
-              <path
-                class="svg-stroke stroke-top"
-                d="M14.5 17.5C14.5 15.2909 16.2909 13.5 18.5 13.5H29.5"
-                stroke="#FFFFFF"
-                stroke-width="2.5"
-                stroke-linecap="round"
-              />
-              <path
-                class="svg-stroke stroke-mid"
-                d="M14.5 23H31.5"
-                stroke="#E58A42"
-                stroke-width="2.5"
-                stroke-linecap="round"
-              />
-              <path
-                class="svg-stroke stroke-bot"
-                d="M31.5 28.5C31.5 30.7091 29.7091 32.5 27.5 32.5H16.5"
-                stroke="#FFFFFF"
-                stroke-width="2.5"
-                stroke-linecap="round"
-              />
-            </svg>
-          </div>
+    <div id="page-loader" class="page-loader" aria-hidden="true">
+      <div class="loader-inner">
+        <div class="loader-logo">
+          <img
+            src="Assets/Minimalist%20S-Curve%20App%20Icon.png"
+            alt="Logo"
+            class="loader-logo-img"
+            onerror="this.style.display='none'; document.querySelector('.brand-mark').style.display='block';"
+          />
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span class="loader-brand-name">Sync<span>Stay</span></span>
         </div>
-
-        <div class="loader-wordmark">
-          <div class="loader-brand">Sync<span>Stay</span></div>
-          <div class="loader-tagline">Hotel Housekeeping Coordination</div>
-        </div>
-
-        <div class="loader-progress-panel">
-          <div class="loader-meta-row">
-            <div class="loader-status-wrap">
-              <span class="loader-pulse-dot" aria-hidden="true"></span>
-              <span id="loader-status-text" class="loader-text">
-                Preparing your workspace...
-              </span>
-            </div>
-            <span id="loader-percent" class="loader-percent">0%</span>
-          </div>
-
-          <div
-            class="loader-progress-track"
-            role="progressbar"
-            aria-valuemin="0"
-            aria-valuemax="100"
-            aria-valuenow="0"
-          >
-            <div id="loader-progress-bar" class="loader-progress-bar"></div>
-          </div>
+        <span class="loader-sub">THE MERIDIAN GRAND HOTEL</span>
+        <div class="loader-bar">
+          <div class="loader-bar-fill"></div>
         </div>
       </div>
-
-      <div class="loader-footer">v1.0 · Local Workspace Engine</div>
     </div>
     
     <!-- =========================================================
@@ -270,12 +216,12 @@
               </div>
 
               <div class="auth-field">
-                <label for="register-email">Work Email</label>
+                <label for="register-userid">User ID</label>
                 <input
-                  id="register-email"
-                  type="email"
-                  placeholder="name@meridiangrand.com"
-                  autocomplete="email"
+                  id="register-userid"
+                  type="text"
+                  placeholder="Create a User ID (e.g. 12630501)"
+                  autocomplete="username"
                   required
                 />
               </div>
@@ -512,7 +458,6 @@
         </div>
       </div>
     </div>
-
     <div id="toast-container" class="toast-container" aria-live="polite"></div>
 
     <!-- Allowed External Libraries: Lucide Icons & Chart.js -->
