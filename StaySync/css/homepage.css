@@ -597,22 +597,38 @@ ul {
   gap: 1rem;
 }
 
-/* Entrance Animation Classes */
+/* --------------------------------------------------------------------------
+   HERO ENTRANCE ANIMATION (SMOOTH SLIDE IN FROM LEFT)
+   -------------------------------------------------------------------------- */
 .hero-anim {
   opacity: 0;
-  transform: translateY(18px);
-  animation: fadeUpEntrance 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transform: translateX(-45px);
+  animation: slideInFromLeft 2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, opacity;
 }
 
-.hero-anim-1 { animation-delay: 0.15s; }
-.hero-anim-2 { animation-delay: 0.28s; }
-.hero-anim-3 { animation-delay: 0.42s; }
-.hero-anim-4 { animation-delay: 0.55s; }
+/* Staggered delays — starts after the white loading screen clears (~0.6s) */
+.hero-anim-1 { 
+  animation-delay: 0.65s; /* Eyebrow: THE MERIDIAN GRAND HOTEL */
+}
+.hero-anim-2 { 
+  animation-delay: 0.80s; /* Main Heading: Exceptional Hospitality... */
+}
+.hero-anim-3 { 
+  animation-delay: 0.95s; /* Paragraph Description */
+}
+.hero-anim-4 { 
+  animation-delay: 1.10s; /* Action Buttons */
+}
 
-@keyframes fadeUpEntrance {
+@keyframes slideInFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-45px);
+  }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateX(0);
   }
 }
 
@@ -1594,4 +1610,92 @@ ul {
   .hotel-title {
     font-size: 16px !important;
   }
+}
+
+/* ==========================================================================
+   SyncStay — LUXURY ORANGE ACCENT STRIPS & POLISH
+   ========================================================================== */
+
+/* 1. Top Header Orange Accent Strip */
+.site-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #e58a42 0%, #f7ab6d 50%, #e58a42 100%);
+  z-index: 1001;
+}
+
+/* 2. Hero Bottom Transition Strip (eliminates the stark white cut) */
+.hero-section::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 5%, #e58a42 35%, #e58a42 65%, transparent 95%);
+  z-index: 5;
+}
+
+/* 3. Section Eyebrow Orange Accent Strip */
+.section-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.section-eyebrow::before {
+  content: '';
+  width: 20px;
+  height: 2px;
+  background-color: #e58a42;
+  border-radius: 2px;
+  display: inline-block;
+}
+
+/* 4. Footer Top Orange Accent Band & Gap Fix */
+.site-footer {
+  position: relative;
+  border-top: 3px solid #e58a42 !important;
+  box-shadow: 0 -8px 24px rgba(229, 138, 66, 0.08);
+}
+
+/* Tighten the empty white space above the footer */
+#contact {
+  padding-bottom: 4rem;
+}
+
+/* 5. Subtle Orange Accent on Active Nav & Hover Links */
+.nav-link.active {
+  color: #202020 !important;
+  font-weight: 500;
+}
+
+.nav-link.active::after {
+  background-color: #e58a42;
+  height: 2px;
+}
+
+/* 6. Clean Card Top Accent Highlights */
+.service-card {
+  border-top: 2px solid transparent;
+}
+
+.service-card:hover {
+  border-top-color: #e58a42;
+}
+
+/* 7. Footer Staff Access Button Accent */
+.footer-login-link {
+  border-left: 2px solid #e58a42;
+  transition: all 0.2s ease;
+}
+
+.footer-login-link:hover {
+  border-color: #e58a42;
+  background-color: rgba(229, 138, 66, 0.12);
+  transform: translateX(3px);
 }
