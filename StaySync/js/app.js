@@ -2384,7 +2384,7 @@ const SyncStayApp = (() => {
   }
 
   /* ===================================================================
-     9. SETTINGS & RESET DEMO DATA MODULE
+     9. SETTINGS MODULE
      =================================================================== */
 
   function renderSettings() {
@@ -2482,95 +2482,26 @@ const SyncStayApp = (() => {
               </div>
             </div>
           </div>
-
-          <div class="card">
-            <div class="card-header">
-              <div>
-                <h3 class="card-title">Demo Data & Local Storage</h3>
-                <p class="card-subtitle">Browser-local persistence initialized from js/demo-data.js</p>
-              </div>
-            </div>
-            <div class="card-body">
-              <p class="text-muted" style="margin-top:0">
-                All rooms, tasks, staff, inspections, and maintenance changes are saved in this browser's
-                LocalStorage. Data is device-specific and does not sync across separate browsers.
-              </p>
-              <button id="reset-demo-btn" class="btn-danger" ${
-                p.canResetData ? "" : "disabled title='Administrator only'"
-              }>
-                <i data-lucide="rotate-ccw"></i> Reset Demo Data
-              </button>
-              ${
-                !p.canResetData
-                  ? `<p class="text-muted" style="margin-top:8px">Sign in as an Administrator (12629947) to reset the shared demo dataset.</p>`
-                  : ""
-              }
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-header">
-              <div>
-                <h3 class="card-title">Default Demo Credentials</h3>
-                <p class="card-subtitle">Shared reference accounts</p>
-              </div>
-            </div>
-            <div class="card-body" style="padding:0">
-              <table class="cred-table">
-                <thead>
-                  <tr><th>User ID</th><th>Password</th><th>Role</th></tr>
-                </thead>
-                <tbody>
-                  ${demoData.users
-                    .map(
-                      (u) => `
-                    <tr>
-                      <td class="mono">${u.userId}</td>
-                      <td class="mono">${u.password}</td>
-                      <td>${u.role}</td>
-                    </tr>
-                  `
-                    )
-                    .join("")}
-                </tbody>
-              </table>
-            </div>
-          </div>
         </div>
       </div>
     `;
 
     const form = document.getElementById("hotel-settings-form");
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
-      if (!p.canEditHotelSettings) return;
-      SyncStayStore.updateHotelSettings({
-        name: document.getElementById("hs-name").value,
-        propertyCode: document.getElementById("hs-code").value,
-        floors: document.getElementById("hs-floors").value,
-        checkoutTime: document.getElementById("hs-checkout").value,
-        checkinTime: document.getElementById("hs-checkin").value,
-        contactEmail: document.getElementById("hs-email").value,
-        address: document.getElementById("hs-address").value
-      });
-      updateShellUserChrome();
-      SyncStayUI.toast("Hotel settings saved.", "success");
-    });
-
-    const resetBtn = document.getElementById("reset-demo-btn");
-    if (resetBtn && p.canResetData) {
-      resetBtn.addEventListener("click", () => {
-        SyncStayUI.confirm({
-          title: "Reset Demo Data",
-          message:
-            "This will erase all custom rooms, tasks, staff edits, inspections, and tickets in this browser and restore the default dataset from js/demo-data.js. Continue?",
-          confirmLabel: "Reset All Data",
-          onConfirm: () => {
-            SyncStayStore.resetDemoData();
-            SyncStayUI.toast("Demo data restored to defaults.", "success");
-            renderCurrentView();
-          }
+    if (form) {
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        if (!p.canEditHotelSettings) return;
+        SyncStayStore.updateHotelSettings({
+          name: document.getElementById("hs-name").value,
+          propertyCode: document.getElementById("hs-code").value,
+          floors: document.getElementById("hs-floors").value,
+          checkoutTime: document.getElementById("hs-checkout").value,
+          checkinTime: document.getElementById("hs-checkin").value,
+          contactEmail: document.getElementById("hs-email").value,
+          address: document.getElementById("hs-address").value
         });
+        updateShellUserChrome();
+        SyncStayUI.toast("Hotel settings saved.", "success");
       });
     }
   }

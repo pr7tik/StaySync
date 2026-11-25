@@ -34,9 +34,9 @@ const demoData = {
       role: "Administrator"
     },
     {
-      userId: "12630000",
+      userId: "12629949",
       password: "SyncStay@321",
-      name: "Marcus Chen",
+      name: "Jeffy Einstein",
       email: "marcus.chen@meridiangrand.com",
       role: "Housekeeping Manager"
     },
@@ -68,8 +68,8 @@ const demoData = {
       completedTasks: 18
     },
     {
-      id: "12630000",
-      name: "Marcus Chen",
+      id: "12629949",
+      name: "Jeffy Einstein",
       role: "Housekeeping Manager",
       contact: "+1 (555) 201-4412",
       assignedFloor: "All Floors",
@@ -404,7 +404,7 @@ const demoData = {
     {
       id: "INS-301",
       roomNumber: "104",
-      inspectorName: "Marcus Chen",
+      inspectorName: "Jeffy Einstein",
       date: "2026-11-24 09:25",
       result: "Passed",
       notes: "Immaculate presentation. All accessibility items verified.",
@@ -422,7 +422,7 @@ const demoData = {
     {
       id: "INS-302",
       roomNumber: "403",
-      inspectorName: "Marcus Chen",
+      inspectorName: "Jeffy Einstein",
       date: "2026-11-24 08:40",
       result: "Passed",
       notes: "Ready for immediate guest check-in.",
@@ -440,7 +440,7 @@ const demoData = {
     {
       id: "INS-303",
       roomNumber: "103",
-      inspectorName: "Marcus Chen",
+      inspectorName: "Jeffy Einstein",
       date: "2026-11-23 16:15",
       result: "Failed",
       notes: "Mirror streaks in bathroom and desk surface dust remaining.",
@@ -565,7 +565,7 @@ const demoData = {
       id: "NTF-5",
       type: "Failed Inspection",
       title: "Inspection Failed — Room 103",
-      message: "Marcus Chen flagged Room 103 for re-cleaning due to bathroom streaks.",
+      message: "Jeffy Einstein flagged Room 103 for re-cleaning due to bathroom streaks.",
       timestamp: "2026-11-23 16:16",
       read: true
     }
@@ -575,7 +575,7 @@ const demoData = {
     {
       id: "ACT-1",
       action: "Inspection Passed",
-      detail: "Marcus Chen passed quality inspection for Room 104.",
+      detail: "Jeffy Einstein passed quality inspection for Room 104.",
       timestamp: "2026-11-24 09:25"
     },
     {

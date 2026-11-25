@@ -189,45 +189,52 @@ const SyncStayStore = (() => {
     const cleanId = String(userId || "").trim();
     const user = getState().users.find(
       (u) =>
-        (u.userId === cleanId ||
+        (u.userId.toLowerCase() === cleanId.toLowerCase() ||
           u.name.toLowerCase() === cleanId.toLowerCase()) &&
         u.password === password
     );
     return user || null;
   }
 
-  function registerUser({ username, email, password }) {
+  function registerUser({ username, userId, password }) {
     const s = getState();
     const cleanName = username.trim();
-    const cleanEmail = email.trim().toLowerCase();
+    const cleanUserId = String(userId || "").trim();
 
-    if (s.users.some((u) => u.email.toLowerCase() === cleanEmail)) {
-      return { error: "An account with this email already exists." };
+    if (!cleanUserId) {
+      return { error: "Please enter a valid User ID." };
     }
 
-    const generatedId = String(12630500 + s.users.length + Math.floor(Math.random() * 90));
+    if (
+      s.users.some(
+        (u) => u.userId.toLowerCase() === cleanUserId.toLowerCase()
+      )
+    ) {
+      return { error: "An account with this User ID already exists. Please choose another." };
+    }
+
     // Strictly never assign Administrator role to self-registered accounts
     const newUser = {
-      userId: generatedId,
-      password,
+      userId: cleanUserId,
+      password: password,
       name: cleanName,
-      email: cleanEmail,
+      email: `${cleanName.toLowerCase().replace(/\s+/g, ".")}@meridiangrand.com`,
       role: "Housekeeping Staff"
     };
 
     s.users.push(newUser);
     s.staff.push({
-      id: generatedId,
+      id: cleanUserId,
       name: cleanName,
       role: "Housekeeping Staff",
-      contact: cleanEmail,
+      contact: `${cleanName.toLowerCase().replace(/\s+/g, ".")}@meridiangrand.com`,
       assignedFloor: "Floor 1",
       shift: "Morning (07:00 - 15:00)",
       availability: "Available",
       completedTasks: 0
     });
 
-    addActivity("User Registered", `${cleanName} registered as Housekeeping Staff (${generatedId}).`);
+    addActivity("User Registered", `${cleanName} registered as Housekeeping Staff (${cleanUserId}).`);
     save();
     return { user: newUser };
   }
