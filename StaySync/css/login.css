@@ -1,5 +1,5 @@
 /* =====================================================================
-   STAYSYNC — MINIMALIST SAAS LOGIN & REGISTRATION STYLES
+   SyncStay — MINIMALIST SAAS LOGIN & REGISTRATION STYLES
    Matches dashboard design system (#F5F5F5, #FFFFFF, #202020, #E58A42)
    ===================================================================== */
 
@@ -425,4 +425,20 @@
     padding: 10px 14px;
     text-align: left;
   }
+}
+
+.auth-brand-lockup {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.auth-brand-logo {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  object-fit: cover;
+  display: block;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }

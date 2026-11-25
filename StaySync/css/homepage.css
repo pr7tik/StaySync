@@ -1,5 +1,5 @@
 /* ==========================================================================
-   STAYSYNC — THE MERIDIAN GRAND HOTEL PUBLIC HOMEPAGE STYLESHEET
+   SyncStay — THE MERIDIAN GRAND HOTEL PUBLIC HOMEPAGE STYLESHEET
    Color Palette:
    - Background:     #F5F5F5
    - White:          #FFFFFF
@@ -82,7 +82,7 @@ ul {
 }
 
 /* --------------------------------------------------------------------------
-   ENTRY LOADING SCREEN (MATCHES STAYSYNC BRANDING)
+   ENTRY LOADING SCREEN (MATCHES SyncStay BRANDING)
    -------------------------------------------------------------------------- */
 .page-loader {
   position: fixed;
@@ -206,11 +206,11 @@ ul {
   transform: translateX(2px);
 }
 
-/* Navbar Employee Login Button — Subtle Orange Accent */
+/* Navbar Employee Login Button — Permanent Soft Orange Accent */
 .btn-login-nav {
-  background-color: var(--bg-white);
+  background-color: var(--accent-orange-soft);
   color: var(--text-primary);
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--accent-orange);
   border-left: 3px solid var(--accent-orange);
   padding: 0.58rem 1.15rem;
   font-size: 0.825rem;
@@ -221,8 +221,9 @@ ul {
 }
 
 .btn-login-nav:hover {
-  border-color: var(--accent-orange);
-  background-color: var(--accent-orange-soft);
+  background-color: rgba(229, 138, 66, 0.18);
+  border-color: var(--accent-orange-hover);
+  transform: translateY(-1px);
 }
 
 /* Hero Primary Button */
@@ -265,7 +266,7 @@ ul {
   background-color: var(--bg-primary);
 }
 
-/* Subtle Accent CTA (StaySync Section) */
+/* Subtle Accent CTA (SyncStay Section) */
 .btn-accent {
   background-color: var(--text-primary);
   color: var(--bg-white);
@@ -332,7 +333,7 @@ ul {
   gap: 0.9rem;
 }
 
-.staysync-logo {
+.SyncStay-logo {
   display: inline-flex;
   align-items: center;
   gap: 0.55rem;
@@ -868,9 +869,9 @@ ul {
 }
 
 /* --------------------------------------------------------------------------
-   6. INTRODUCING STAYSYNC SECTION
+   6. INTRODUCING SyncStay SECTION
    -------------------------------------------------------------------------- */
-.staysync-split {
+.SyncStay-split {
   display: grid;
   grid-template-columns: 1fr 1.08fr;
   gap: 4.5rem;
@@ -899,7 +900,7 @@ ul {
   background-color: var(--accent-orange);
 }
 
-.staysync-intro {
+.SyncStay-intro {
   margin-bottom: 2rem;
 }
 
@@ -957,7 +958,7 @@ ul {
   line-height: 1.55;
 }
 
-.staysync-cta {
+.SyncStay-cta {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
@@ -969,7 +970,7 @@ ul {
   color: var(--text-secondary);
 }
 
-/* StaySync Dashboard Operations Preview Card */
+/* SyncStay Dashboard Operations Preview Card */
 .dashboard-showcase {
   background-color: var(--bg-primary);
   border: 1px solid var(--border-color);
@@ -1358,11 +1359,11 @@ ul {
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.staysync-logo-light .logo-mark {
+.SyncStay-logo-light .logo-mark {
   background-color: var(--bg-white);
 }
 
-.staysync-logo-light .logo-text {
+.SyncStay-logo-light .logo-text {
   color: var(--bg-white);
 }
 
@@ -1496,7 +1497,7 @@ ul {
   }
 
   .about-grid,
-  .staysync-split,
+  .SyncStay-split,
   .contact-grid {
     grid-template-columns: 1fr;
     gap: 3rem;
@@ -1569,5 +1570,28 @@ ul {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* Custom SyncStay PNG Logo */
+.logo-mark-img {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  object-fit: cover;
+  display: block;
+  flex-shrink: 0;
+}
+
+/* Larger "The Meridian Grand Hotel" text in navbar */
+.hotel-title {
+  font-size: 21px !important;
+  font-weight: 600 !important;
+  line-height: 1.2;
+}
+
+@media (max-width: 768px) {
+  .hotel-title {
+    font-size: 16px !important;
   }
 }
